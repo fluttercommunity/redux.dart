@@ -1,3 +1,7 @@
 name: redux
+author: John Ryan <john.p.ryan4@gmail.com>
+description: Redux for Dart
+homepage: http://github.com/johnpryan/redux.dart
+version: 1.0.0
 dev_dependencies:
   browser: any

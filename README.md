@@ -39,4 +39,8 @@ render(int state) {
 }
 ```
 
-see the `examples/` directory for details.
+see the `examples/` directory for details:
+
+```
+pub serve example
+```
