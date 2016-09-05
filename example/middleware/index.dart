@@ -10,19 +10,30 @@ render(int state) {
 // Create a Reducer with a State (int) and an Action (String)
 // Any dart object can be used for Action and State.
 Reducer<int, String> reducer = (int state, String action) {
-    switch (action) {
-      case 'INCREMENT':
-        return state + 1;
-      case 'DECREMENT':
-        return state - 1;
-      default:
-        return state;
-    }
+  switch (action) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    default:
+      return state;
+  }
+};
+
+// A piece of middleware that will log all actions with a timestamp
+// to your console!
+Middleware<int, String> loggingMiddleware = (store, action, next) {
+  print('${new DateTime.now()}: $action');
+
+  next(action);
 };
 
 main() {
   // Create a new reducer and store for the app.
-  var store = new Store(reducer, initialState: 0);
+
+  var store = new Store<int, String>(reducer,
+      initialState: 0,
+      middleware: <Middleware<int, String>>[loggingMiddleware]);
 
   render(store.state);
   store.onChange.listen(render);
@@ -36,8 +47,7 @@ main() {
   });
 
   querySelector('#incrementIfOdd').onClick.listen((_) {
-    if (store.state % 2 != 0)
-      store.dispatch('INCREMENT');
+    if (store.state % 2 != 0) store.dispatch('INCREMENT');
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
@@ -45,5 +55,4 @@ main() {
       store.dispatch('INCREMENT');
     });
   });
-
 }
