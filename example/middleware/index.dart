@@ -22,10 +22,21 @@ class Counter extends Reducer<int, String> {
   }
 }
 
+// A piece of middleware that will log all actions with a timestamp to your
+// console!
+class LoggingMiddleware implements Middleware<int, String> {
+  call(Store<int, String> store, String action, next) {
+    print('${new DateTime.now()}: $action');
+
+    next(action);
+  }
+}
+
 main() {
   // Create a new reducer and store for the app.
-  var reducer = new Counter();
-  var store = new Store(reducer, initialState: 0);
+  var store = new Store<int, String>(new Counter(),
+      initialState: 0,
+      middleware: <Middleware<int, String>>[new LoggingMiddleware()]);
 
   render(store.state);
   store.onChange.listen(render);

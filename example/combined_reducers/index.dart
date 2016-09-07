@@ -14,13 +14,10 @@ class AppState {
   AppState(this.count, this.clickCount);
 }
 
-enum AppAction {
-  increment,
-  decrement
-}
+enum AppAction { increment, decrement }
 
-// Create a Reducer with a State (int) and an Action (String)
-// Any dart object can be used for Action and State.
+// Create a Reducer with a State (int) and an Action (String) Any dart object
+// can be used for Action and State.
 class Counter extends Reducer<AppState, AppAction> {
   reduce(AppState state, AppAction action) {
     switch (action) {
@@ -34,8 +31,8 @@ class Counter extends Reducer<AppState, AppAction> {
   }
 }
 
-// Create a Reducer with a State (int) and an Action (String)
-// Any dart object can be used for Action and State.
+// Create a Reducer with a State (int) and an Action (String) Any dart object
+// can be used for Action and State.
 class ClickCounter extends Reducer<AppState, AppAction> {
   reduce(AppState state, AppAction action) {
     switch (action) {
@@ -53,8 +50,9 @@ main() {
   // Create a new reducer and store for the app.
   var reducer1 = new Counter();
   var reducer2 = new ClickCounter();
-  var combined = new CombinedReducer([reducer1, reducer2]);
-  var store = new Store<AppState, AppAction>(combined, initialState: new AppState(0, 0));
+  var combined = new CombinedReducer<AppState, AppAction>([reducer1, reducer2]);
+  var store = new Store<AppState, AppAction>(combined,
+      initialState: new AppState(0, 0));
 
   render(store.state);
   store.onChange.listen(render);
@@ -68,8 +66,7 @@ main() {
   });
 
   querySelector('#incrementIfOdd').onClick.listen((_) {
-    if (store.state % 2 != 0)
-      store.dispatch(AppAction.increment);
+    if (store.state.count % 2 != 0) store.dispatch(AppAction.increment);
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
