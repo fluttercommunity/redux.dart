@@ -1,125 +1,73 @@
 import 'package:redux/redux.dart';
 import 'package:test/test.dart';
+import 'utils.dart';
 
-void main() {
-  test('actions should be run through the middleware', () {
-    int counter = 0;
+main() {
+  group('middleware', () {
+    test('are invoked by the store', () {
+      var reducer = new StringReducer();
+      var middleware = new IncrementMiddleware();
+      var store =
+          new Store(reducer, initialState: 'hello', middleware: [middleware]);
+      store.dispatch('test');
+      expect(middleware.counter, equals(1));
+    });
 
-    Reducer<String, String> reducer = (state, action) {
-      return state;
-    };
+    test('are applied in the correct order', () {
+      var reducer = new StringReducer();
+      var middleware1 = new IncrementMiddleware();
+      var middleware2 = new IncrementMiddleware();
+      var middleware = [middleware1, middleware2];
+      var store =
+          new Store(reducer, initialState: 'hello', middleware: middleware);
 
-    Middleware<String, String> middleware = (store, action, next) {
-      counter += 1;
-      next(action);
-    };
+      var order = [];
+      middleware1.invocations.listen((action) => order.add('first'));
+      middleware2.invocations.listen((action) => order.add('second'));
 
-    Store<String, String> store = new Store(reducer,
-        initialState: 'Hello',
-        middleware: <Middleware<String, String>>[middleware]);
+      store.dispatch('test');
+      expect(order[0], equals('first'));
+      expect(order[1], equals('second'));
+    });
 
-    store.dispatch('test');
+    test('actions can be dispatched multiple times', () {
+      var reducer = new StringReducer();
+      var middleware1 = new ExtraActionIncrementMiddleware();
+      var middleware2 = new IncrementMiddleware();
+      var middleware = [middleware1, middleware2];
+      var store =
+          new Store(reducer, initialState: 'hello', middleware: middleware);
 
-    expect(counter, equals(1));
-  });
+      var order = [];
+      middleware1.invocations.listen((action) => order.add('first'));
+      middleware2.invocations.listen((action) => order.add('second'));
 
-  test('actions should be run through the middleware in the correct order', () {
-    int counter = 0;
-    List<String> order = [];
+      store.dispatch('test');
+      expect(order[0], equals('first'));
+      expect(order[1], equals('second'));
+      expect(order[2], equals('second'));
+    });
 
-    Reducer<String, String> reducer = (state, action) {
-      return state;
-    };
+    test('actions can be dispatched through entire chain', () {
+      var reducer = new StringReducer();
+      var middleware1 = new ExtraActionIfDispatchedIncrementMiddleware();
+      var middleware2 = new IncrementMiddleware();
+      var middleware = [middleware1, middleware2];
+      var store =
+          new Store(reducer, initialState: 'hello', middleware: middleware);
 
-    Middleware<String, String> middleware1 = (store, action, next) {
-      counter += 1;
-      order.add('first');
-      next(action);
-      order.add('third');
-    };
+      var order = [];
+      middleware1.invocations.listen((action) => order.add('first'));
+      middleware2.invocations.listen((action) => order.add('second'));
 
-    Middleware<String, String> middleware2 = (store, action, next) {
-      counter += 1;
-      order.add('second');
-      next(action);
-    };
+      store.dispatch('test');
 
-    Store<String, String> store = new Store(reducer,
-        initialState: 'Hello', middleware: [middleware1, middleware2]);
+      expect(order[0], equals('first'));
+      expect(order[1], equals('second'));
+      expect(order[2], equals('first'));
+      expect(order[3], equals('second'));
 
-    store.dispatch('test');
-
-    expect(counter, equals(2));
-    expect(order, equals(<String>['first', 'second', 'third']));
-  });
-
-  test('actions should be to dispatch through the chain multiple times', () {
-    int counter = 0;
-    List<String> order = [];
-
-    Reducer<String, String> reducer = (state, action) {
-      return state;
-    };
-
-    Middleware<String, String> middleware1 = (store, action, next) {
-      counter += 1;
-      order.add('first');
-      next(action);
-      order.add('third');
-      next('another action');
-    };
-
-    Middleware<String, String> middleware2 = (store, action, next) {
-      counter += 1;
-      order.add('second');
-      next(action);
-    };
-
-    Store<String, String> store = new Store(reducer,
-        initialState: 'Hello', middleware: [middleware1, middleware2]);
-
-    store.dispatch('test');
-
-    expect(counter, equals(3));
-    expect(order, equals(<String>['first', 'second', 'third', 'second']));
-  });
-
-  test('actions should be to be dispatch through the whole chain', () {
-    int counter = 0;
-    List<String> order = [];
-    bool hasDispatched = false;
-
-    Reducer<String, String> reducer = (state, action) {
-      return state;
-    };
-
-    Middleware<String, String> middleware1 = (store, action, next) {
-      counter += 1;
-      order.add('first');
-      next(action);
-      order.add('third');
-      if (!hasDispatched) {
-        hasDispatched = true;
-
-        store.dispatch('another action');
-      }
-    };
-
-    Middleware<String, String> middleware2 = (store, action, next) {
-      counter += 1;
-      order.add('second');
-      next(action);
-    };
-
-    Store<String, String> store = new Store(reducer,
-        initialState: 'Hello', middleware: [middleware1, middleware2]);
-
-    store.dispatch('test');
-
-    expect(counter, equals(4));
-    expect(
-        order,
-        equals(
-            <String>['first', 'second', 'third', 'first', 'second', 'third']));
+      expect(middleware1.counter, equals(2));
+    });
   });
 }
