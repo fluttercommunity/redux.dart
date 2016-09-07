@@ -7,9 +7,10 @@ render(int state) {
   querySelector('#value').innerHtml = '${state}';
 }
 
-// Create a Reducer with a State (int) and an Action (String)
-// Any dart object can be used for Action and State.
-Reducer<int, String> reducer = (int state, String action) {
+// Create a Reducer with a State (int) and an Action (String) Any dart object
+// can be used for Action and State.
+class Counter extends Reducer<int, String> {
+  reduce(int state, String action) {
     switch (action) {
       case 'INCREMENT':
         return state + 1;
@@ -18,10 +19,12 @@ Reducer<int, String> reducer = (int state, String action) {
       default:
         return state;
     }
-};
+  }
+}
 
 main() {
   // Create a new reducer and store for the app.
+  var reducer = new Counter();
   var store = new Store(reducer, initialState: 0);
 
   render(store.state);
@@ -36,8 +39,7 @@ main() {
   });
 
   querySelector('#incrementIfOdd').onClick.listen((_) {
-    if (store.state % 2 != 0)
-      store.dispatch('INCREMENT');
+    if (store.state % 2 != 0) store.dispatch('INCREMENT');
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
@@ -45,5 +47,4 @@ main() {
       store.dispatch('INCREMENT');
     });
   });
-
 }
