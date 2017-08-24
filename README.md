@@ -1,6 +1,6 @@
 # redux.dart
 
-[Redux](http://redux.js.org/) for Dart using generics for typed State.
+[Redux](http://redux.js.org/) for Dart using generics for typed State. For complete documentation, view the [API Docs](https://www.dartdocs.org/documentation/redux/latest/).
 
 ## Web Examples
 

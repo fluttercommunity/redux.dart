@@ -48,7 +48,8 @@ abstract class ReducerClass<State> {
   State call(State state, dynamic action);
 }
 
-/// A function that intercepts actions before they reach the reducer.
+/// A function that intercepts actions and potentially transform actions before
+/// they reach the reducer.
 ///
 /// Middleware intercept actions before they reach the reducer. This gives them
 /// the ability to produce side-effects or modify the passed in action before
@@ -94,7 +95,7 @@ typedef void Middleware<State>(
 ///     // Create your store with the loggingMiddleware
 ///     final store = new Store<int>(
 ///       counterReducer,
-///       middleware: [loggingMiddleware],
+///       middleware: [new LoggingMiddleware()],
 ///     );
 abstract class MiddlewareClass<State> {
   void call(Store<State> store, dynamic action, NextDispatcher next);
@@ -110,19 +111,50 @@ abstract class MiddlewareClass<State> {
 /// user of this library.
 typedef void NextDispatcher(dynamic action);
 
-/// Manages applying the reducer to the application state.
+/// Creates a Redux store that holds the app state tree.
 ///
-/// Emits an [onChange] event when the state changes.
+/// The only way to change the state tree in the store is to [dispatch] an
+/// action. the action will then be intercepted by any provided [Middleware].
+/// After running through the middleware, the action will be sent to the given
+/// [Reducer] to update the state tree.
 ///
-/// ### Example
+/// To access the state tree, call the [state] getter or listen to the
+/// [onChange] stream.
 ///
-///     final store = new Store<int>(
-///       counterReducer,
-///       initialState: 0,
-///       middleware: [loggingMiddleware]
+/// ### Basic Example
+///
+///     // Create a reducer
+///     final increment = 'INCREMENT';
+///     final decrement = 'DECREMENT';
+///
+///     int counterReducer(int state, action) {
+///       switch (action) {
+///         case increment:
+///           return state + 1;
+///         case decrement:
+///           return state - 1;
+///         default:
+///           return state;
+///       }
 ///     }
+///
+///     // Create the store
+///     final store = new Store<int>(counterReducer, initialState: 0);
+///
+///     // Print the Store's state.
+///     print(store.state); // prints "0"
+///
+///     // Dispatch an action. This will be sent to the reducer to update the
+///     // state.
+///     store.dispatch(increment);
+///
+///     // Print the updated state. As an alternative, you can use the
+///     // `store.onChange.listen` to respond to all state change events.
+///     print(store.state); // prints "1"
 class Store<State> {
   State _state;
+
+  /// Allows you to get the current reducer or replace it with a new one.
   Reducer<State> reducer;
   StreamController<State> _changeController;
   List<NextDispatcher> _dispatchers;
@@ -140,6 +172,27 @@ class Store<State> {
   State get state => _state;
 
   /// A stream that emits the current state when it changes.
+  ///
+  /// ### Example
+  ///
+  ///     // First, create the Store
+  ///     final store = new Store<int>(counterReducer, 0);
+  ///
+  ///     // Next, listen to the Store's onChange stream, and print the latest
+  ///     // state to your console whenever the reducer produces a new State.
+  ///     //
+  ///     // We'll store the StreamSubscription as a variable so we can stop
+  ///     // listening later.
+  ///     final subscription = store.onChange.listen(print);
+  ///
+  ///     // Dispatch some actions, and see the printing magic!
+  ///     store.dispatch("INCREMENT"); // prints 1
+  ///     store.dispatch("INCREMENT"); // prints 2
+  ///     store.dispatch("DECREMENT"); // prints 1
+  ///
+  ///     // When you want to stop printing the state to the console, simply
+  ///     `cancel` your `subscription`.
+  ///     subscription.cancel();
   Stream<State> get onChange => _changeController.stream;
 
   // The base [NextDispatcher].
@@ -177,8 +230,14 @@ class Store<State> {
     _dispatchers[0](action);
   }
 
-  /// Disposes the Store.
-  Future<dynamic> dispose() => _changeController.close();
+  /// Closes down the Store so it will no longer be operational. Only use this
+  /// if you want to destroy the Store while your app is running. Do not use
+  /// this method as a way to stop listening to state changes. For that purpose,
+  /// view the [onChange] documentation.
+  void teardown() {
+    _state = null;
+    _changeController.close();
+  }
 }
 
 /// Defines a utility function that combines several reducers.
