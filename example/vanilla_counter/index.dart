@@ -9,23 +9,20 @@ render(int state) {
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class Counter extends Reducer<int, String> {
-  reduce(int state, String action) {
-    switch (action) {
-      case 'INCREMENT':
-        return state + 1;
-      case 'DECREMENT':
-        return state - 1;
-      default:
-        return state;
-    }
+int counterReducer(int state, action) {
+  switch (action) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    default:
+      return state;
   }
 }
 
 main() {
   // Create a new reducer and store for the app.
-  var reducer = new Counter();
-  var store = new Store(reducer, initialState: 0);
+  final store = new Store(counterReducer, initialState: 0);
 
   render(store.state);
   store.onChange.listen(render);
