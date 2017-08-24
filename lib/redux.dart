@@ -2,12 +2,36 @@ import 'dart:async';
 
 /// Defines an application's state change
 ///
+/// Implement this typedef to modify your app state in response to a given
+/// action.
+///
+/// ### Example
+///
+///     int counterReducer(int state, action) {
+///       switch (action) {
+///         case 'INCREMENT':
+///           return state + 1;
+///         case 'DECREMENT':
+///           return state - 1;
+///         default:
+///           return state;
+///       }
+///     }
+///
+///     final store = new Store<int>(counterReducer);
+typedef State Reducer<State>(State state, dynamic action);
+
+/// Defines a [Reducer] using a class interface.
+///
 /// Implement this class to modify your app state in response to a given action.
 ///
-/// Example:
+/// For some use cases, a class may be preferred to a function. In these
+/// instances, a ReducerClass can be used.
 ///
-///     class Counter extends Reducer<int, String> {
-///       reduce(int state, String action) {
+/// ### Example
+///
+///     class CounterReducer extends ReducerClass<int> {
+///       int call(int state, action) {
 ///         switch (action) {
 ///           case 'INCREMENT':
 ///             return state + 1;
@@ -18,27 +42,62 @@ import 'dart:async';
 ///         }
 ///       }
 ///     }
-abstract class Reducer<State> {
-  State reduce(State state, dynamic action);
+///
+///     final store = new Store<int>(new CounterReducer());
+abstract class ReducerClass<State> {
+  State call(State state, dynamic action);
 }
 
-/// Defines a piece of middleware.
+/// A function that intercepts actions before they reach the reducer.
 ///
 /// Middleware intercept actions before they reach the reducer. This gives them
 /// the ability to produce side-effects or modify the passed in action before
 /// they reach the reducer.
 ///
-/// Example:
+/// ### Example
 ///
-///    class LoggingMiddleware implements Middleware<int, String> {
-///      call(Store<int, String> store, String action, next) {
-///        print('${new DateTime.now()}: $action');
+///     loggingMiddleware(Store<int> store, action, next) {
+///       print('${new DateTime.now()}: $action');
 ///
-///        next(action);
-///      }
-///    }
-abstract class Middleware<State> {
-  call(Store<State> store, dynamic action, NextDispatcher next);
+///       next(action);
+///     }
+///
+///     // Create your store with the loggingMiddleware
+///     final store = new Store<int>(
+///       counterReducer,
+///       middleware: [loggingMiddleware],
+///     );
+typedef void Middleware<State>(
+  Store<State> store,
+  dynamic action,
+  NextDispatcher next,
+);
+
+/// Defines a [Middleware] using a Class interface.
+///
+/// Middleware intercept actions before they reach the reducer. This gives them
+/// the ability to produce side-effects or modify the passed in action before
+/// they reach the reducer.
+///
+/// For some use cases, a class may be preferred to a function. In these
+/// instances, a MiddlewareClass can be used.
+///
+/// ### Example
+///     class LoggingMiddleware extends MiddlewareClass<int> {
+///       call(Store<int> store, action, next) {
+///         print('${new DateTime.now()}: $action');
+///
+///         next(action);
+///       }
+///     }
+///
+///     // Create your store with the loggingMiddleware
+///     final store = new Store<int>(
+///       counterReducer,
+///       middleware: [loggingMiddleware],
+///     );
+abstract class MiddlewareClass<State> {
+  void call(Store<State> store, dynamic action, NextDispatcher next);
 }
 
 /// The contract between one piece of middleware and the next in the chain.
@@ -52,7 +111,16 @@ abstract class Middleware<State> {
 typedef void NextDispatcher(dynamic action);
 
 /// Manages applying the reducer to the application state.
+///
 /// Emits an [onChange] event when the state changes.
+///
+/// ### Example
+///
+///     final store = new Store<int>(
+///       counterReducer,
+///       initialState: 0,
+///       middleware: [loggingMiddleware]
+///     }
 class Store<State> {
   State _state;
   Reducer<State> reducer;
@@ -80,13 +148,12 @@ class Store<State> {
   // been run. Its job is simple: Run the current state through the reducer,
   // save the result, and notify any subscribers.
   _reduceAndNotify(dynamic action) {
-    var state = reducer.reduce(_state, action);
+    final state = reducer(_state, action);
     _state = state;
     _changeController.add(state);
   }
 
-  List<NextDispatcher> _createDispatchers(
-      List<Middleware<State>> middleware) {
+  List<NextDispatcher> _createDispatchers(List<Middleware<State>> middleware) {
     List<NextDispatcher> dispatchers = [];
 
     // Add _reduceAndNotify as our base dispatcher
@@ -94,8 +161,8 @@ class Store<State> {
 
     // Convert each [Middleware] into a [NextDispatcher]
     for (var nextMiddleware in middleware.reversed) {
-      var next = dispatchers.last;
-      var dispatcher = (dynamic action) => nextMiddleware(this, action, next);
+      final next = dispatchers.last;
+      final dispatcher = (dynamic action) => nextMiddleware(this, action, next);
       dispatchers.add(dispatcher);
     }
 
@@ -109,6 +176,9 @@ class Store<State> {
   void dispatch(dynamic action) {
     _dispatchers[0](action);
   }
+
+  /// Disposes the Store.
+  Future<dynamic> dispose() => _changeController.close();
 }
 
 /// Defines a utility function that combines several reducers.
@@ -117,33 +187,25 @@ class Store<State> {
 /// be convenient to break reducers up into smaller parts that handle more
 /// specific functionality that can be decoupled and easily tested.
 ///
-/// Example:
+/// ### Example
 ///
-///     class HelloReducer {
-///       reduce(state, action) {
+///     helloReducer(state, action) {
 ///         return "hello";
-///       }
 ///     }
 ///
-///     class FriendReducer
-///       reduce(state, action) {
-///         return state + " friend";
-///       }
+///     friendReducer(state, action) {
+///       return state + " friend";
 ///     }
 ///
-///     Reducer<String, String> helloFriendReducer = new CombinedReducer(new
-///       HelloReducer(), new FriendReducer());
-class CombinedReducer<State> implements Reducer<State> {
-  List<Reducer<State>> _reducers;
-
-  CombinedReducer(Iterable<Reducer<State>> reducers) {
-    _reducers = new List.from(reducers);
-  }
-
-  State reduce(State state, dynamic action) {
-    for (var reducer in _reducers) {
-      state = reducer.reduce(state, action);
+///     final helloFriendReducer = combineReducers(
+///       helloReducer,
+///       friendReducer,
+///     );
+Reducer<State> combineReducers<State>(Iterable<Reducer<State>> reducers) {
+  return (State state, dynamic action) {
+    for (final reducer in reducers) {
+      state = reducer(state, action);
     }
     return state;
-  }
+  };
 }
