@@ -18,8 +18,8 @@ import 'dart:async';
 ///         }
 ///       }
 ///     }
-abstract class Reducer<State, Action> {
-  State reduce(State state, Action action);
+abstract class Reducer<State> {
+  State reduce(State state, dynamic action);
 }
 
 /// Defines a piece of middleware.
@@ -37,8 +37,8 @@ abstract class Reducer<State, Action> {
 ///        next(action);
 ///      }
 ///    }
-abstract class Middleware<State, Action> {
-  call(Store<State, Action> store, Action action, NextDispatcher next);
+abstract class Middleware<State> {
+  call(Store<State> store, dynamic action, NextDispatcher next);
 }
 
 /// The contract between one piece of middleware and the next in the chain.
@@ -49,19 +49,19 @@ abstract class Middleware<State, Action> {
 ///
 /// This class is an implementation detail, and should never be constructed by a
 /// user of this library.
-typedef void NextDispatcher<Action>(Action action);
+typedef void NextDispatcher(dynamic action);
 
 /// Manages applying the reducer to the application state.
 /// Emits an [onChange] event when the state changes.
-class Store<State, Action> {
+class Store<State> {
   State _state;
-  Reducer<State, Action> reducer;
+  Reducer<State> reducer;
   StreamController<State> _changeController;
-  List<NextDispatcher<Action>> _dispatchers;
+  List<NextDispatcher> _dispatchers;
 
   Store(this.reducer,
       {State initialState,
-      List<Middleware<State, Action>> middleware: const [],
+      List<Middleware<State>> middleware: const [],
       bool syncStream: false})
       : _changeController = new StreamController.broadcast(sync: syncStream) {
     _state = initialState;
@@ -79,14 +79,14 @@ class Store<State, Action> {
   // This will be called after all other middleware provided by the user have
   // been run. Its job is simple: Run the current state through the reducer,
   // save the result, and notify any subscribers.
-  _reduceAndNotify(Action action) {
+  _reduceAndNotify(dynamic action) {
     var state = reducer.reduce(_state, action);
     _state = state;
     _changeController.add(state);
   }
 
   List<NextDispatcher> _createDispatchers(
-      List<Middleware<State, Action>> middleware) {
+      List<Middleware<State>> middleware) {
     List<NextDispatcher> dispatchers = [];
 
     // Add _reduceAndNotify as our base dispatcher
@@ -95,7 +95,7 @@ class Store<State, Action> {
     // Convert each [Middleware] into a [NextDispatcher]
     for (var nextMiddleware in middleware.reversed) {
       var next = dispatchers.last;
-      var dispatcher = (Action action) => nextMiddleware(this, action, next);
+      var dispatcher = (dynamic action) => nextMiddleware(this, action, next);
       dispatchers.add(dispatcher);
     }
 
@@ -106,7 +106,7 @@ class Store<State, Action> {
   /// to the state using the given [Reducer]. Please note: [Middleware] can
   /// intercept actions, and can modify actions or stop them from passing
   /// through to the reducer.
-  void dispatch(Action action) {
+  void dispatch(dynamic action) {
     _dispatchers[0](action);
   }
 }
@@ -133,14 +133,14 @@ class Store<State, Action> {
 ///
 ///     Reducer<String, String> helloFriendReducer = new CombinedReducer(new
 ///       HelloReducer(), new FriendReducer());
-class CombinedReducer<State, Action> implements Reducer<State, Action> {
-  List<Reducer<State, Action>> _reducers;
+class CombinedReducer<State> implements Reducer<State> {
+  List<Reducer<State>> _reducers;
 
-  CombinedReducer(Iterable<Reducer<State, Action>> reducers) {
+  CombinedReducer(Iterable<Reducer<State>> reducers) {
     _reducers = new List.from(reducers);
   }
 
-  State reduce(State state, Action action) {
+  State reduce(State state, dynamic action) {
     for (var reducer in _reducers) {
       state = reducer.reduce(state, action);
     }

@@ -9,8 +9,8 @@ render(int state) {
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class Counter extends Reducer<int, String> {
-  reduce(int state, String action) {
+class Counter extends Reducer<int> {
+  reduce(int state, dynamic action) {
     switch (action) {
       case 'INCREMENT':
         return state + 1;

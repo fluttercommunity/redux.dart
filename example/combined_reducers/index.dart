@@ -18,8 +18,8 @@ enum AppAction { increment, decrement }
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class Counter extends Reducer<AppState, AppAction> {
-  reduce(AppState state, AppAction action) {
+class Counter extends Reducer<AppState> {
+  reduce(AppState state, dynamic action) {
     switch (action) {
       case AppAction.increment:
         return new AppState(state.count + 1, state.clickCount);
@@ -33,8 +33,8 @@ class Counter extends Reducer<AppState, AppAction> {
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class ClickCounter extends Reducer<AppState, AppAction> {
-  reduce(AppState state, AppAction action) {
+class ClickCounter extends Reducer<AppState> {
+  reduce(AppState state, dynamic action) {
     switch (action) {
       case AppAction.increment:
         return new AppState(state.count, state.clickCount + 1);
@@ -50,8 +50,8 @@ main() {
   // Create a new reducer and store for the app.
   var reducer1 = new Counter();
   var reducer2 = new ClickCounter();
-  var combined = new CombinedReducer<AppState, AppAction>([reducer1, reducer2]);
-  var store = new Store<AppState, AppAction>(combined,
+  var combined = new CombinedReducer<AppState>([reducer1, reducer2]);
+  var store = new Store<AppState>(combined,
       initialState: new AppState(0, 0));
 
   render(store.state);
