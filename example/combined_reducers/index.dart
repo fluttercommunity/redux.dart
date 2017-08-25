@@ -11,6 +11,7 @@ render(AppState state) {
 class AppState {
   final int count;
   final int clickCount;
+
   AppState(this.count, this.clickCount);
 }
 
@@ -18,41 +19,40 @@ enum AppAction { increment, decrement }
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class Counter extends Reducer<AppState, AppAction> {
-  reduce(AppState state, AppAction action) {
-    switch (action) {
-      case AppAction.increment:
-        return new AppState(state.count + 1, state.clickCount);
-      case AppAction.decrement:
-        return new AppState(state.count - 1, state.clickCount);
-      default:
-        return state;
-    }
+AppState counterReducer(AppState state, action) {
+  switch (action) {
+    case AppAction.increment:
+      return new AppState(state.count + 1, state.clickCount);
+    case AppAction.decrement:
+      return new AppState(state.count - 1, state.clickCount);
+    default:
+      return state;
   }
 }
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class ClickCounter extends Reducer<AppState, AppAction> {
-  reduce(AppState state, AppAction action) {
-    switch (action) {
-      case AppAction.increment:
-        return new AppState(state.count, state.clickCount + 1);
-      case AppAction.decrement:
-        return new AppState(state.count, state.clickCount + 1);
-      default:
-        return state;
-    }
+AppState clickCounterReducer(AppState state, action) {
+  switch (action) {
+    case AppAction.increment:
+      return new AppState(state.count, state.clickCount + 1);
+    case AppAction.decrement:
+      return new AppState(state.count, state.clickCount + 1);
+    default:
+      return state;
   }
 }
 
 main() {
   // Create a new reducer and store for the app.
-  var reducer1 = new Counter();
-  var reducer2 = new ClickCounter();
-  var combined = new CombinedReducer<AppState, AppAction>([reducer1, reducer2]);
-  var store = new Store<AppState, AppAction>(combined,
-      initialState: new AppState(0, 0));
+  final combined = combineReducers<AppState>([
+    counterReducer,
+    clickCounterReducer,
+  ]);
+  final store = new Store<AppState>(
+    combined,
+    initialState: new AppState(0, 0),
+  );
 
   render(store.state);
   store.onChange.listen(render);

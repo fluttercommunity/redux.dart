@@ -9,34 +9,32 @@ render(int state) {
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-class Counter extends Reducer<int, String> {
-  reduce(int state, String action) {
-    switch (action) {
-      case 'INCREMENT':
-        return state + 1;
-      case 'DECREMENT':
-        return state - 1;
-      default:
-        return state;
-    }
+int counterReducer(int state, action) {
+  switch (action) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    default:
+      return state;
   }
 }
 
 // A piece of middleware that will log all actions with a timestamp to your
 // console!
-class LoggingMiddleware implements Middleware<int, String> {
-  call(Store<int, String> store, String action, next) {
-    print('${new DateTime.now()}: $action');
+loggingMiddleware(Store<int> store, action, NextDispatcher next) {
+  print('${new DateTime.now()}: $action');
 
-    next(action);
-  }
+  next(action);
 }
 
 main() {
   // Create a new reducer and store for the app.
-  var store = new Store<int, String>(new Counter(),
-      initialState: 0,
-      middleware: <Middleware<int, String>>[new LoggingMiddleware()]);
+  final store = new Store<int>(
+    counterReducer,
+    initialState: 0,
+    middleware: <Middleware<int>>[loggingMiddleware],
+  );
 
   render(store.state);
   store.onChange.listen(render);
