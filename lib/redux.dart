@@ -57,7 +57,7 @@ abstract class ReducerClass<State> {
 ///
 /// ### Example
 ///
-///     loggingMiddleware(Store<int> store, action, next) {
+///     loggingMiddleware(Store<int> store, action, NextDispatcher next) {
 ///       print('${new DateTime.now()}: $action');
 ///
 ///       next(action);
@@ -85,7 +85,7 @@ typedef void Middleware<State>(
 ///
 /// ### Example
 ///     class LoggingMiddleware extends MiddlewareClass<int> {
-///       call(Store<int> store, action, next) {
+///       call(Store<int> store, action, NextDispatcher next) {
 ///         print('${new DateTime.now()}: $action');
 ///
 ///         next(action);
@@ -101,14 +101,13 @@ abstract class MiddlewareClass<State> {
   void call(Store<State> store, dynamic action, NextDispatcher next);
 }
 
-/// The contract between one piece of middleware and the next in the chain.
+/// The contract between one piece of middleware and the next in the chain. Use
+/// it to send the current action in your [Middleware] to the next piece of
+/// [Middleware] in the chain.
 ///
 /// Middleware can optionally pass the original action or a modified action to
 /// the next piece of middleware, or never call the next piece of middleware at
 /// all.
-///
-/// This class is an implementation detail, and should never be constructed by a
-/// user of this library.
 typedef void NextDispatcher(dynamic action);
 
 /// Creates a Redux store that holds the app state tree.
@@ -161,7 +160,7 @@ class Store<State> {
 
   Store(this.reducer,
       {State initialState,
-      List<Middleware<State>> middleware: const [],
+      List<Middleware<State>> middleware = const [],
       bool syncStream: false})
       : _changeController = new StreamController.broadcast(sync: syncStream) {
     _state = initialState;
@@ -232,11 +231,11 @@ class Store<State> {
 
   /// Closes down the Store so it will no longer be operational. Only use this
   /// if you want to destroy the Store while your app is running. Do not use
-  /// this method as a way to stop listening to state changes. For that purpose,
-  /// view the [onChange] documentation.
-  void teardown() {
+  /// this method as a way to stop listening to [onChange] state changes. For
+  /// that purpose, view the [onChange] documentation.
+  Future teardown() async {
     _state = null;
-    _changeController.close();
+    return _changeController.close();
   }
 }
 

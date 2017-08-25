@@ -35,7 +35,7 @@ int counterReducer(int state, action) {
 
 // A piece of middleware that will log all actions with a timestamp
 // to your console!
-loggingMiddleware(Store<int> store, action, next) {
+loggingMiddleware(Store<int> store, action, NextDispatcher next) {
   print('${new DateTime.now()}: $action');
 
   next(action);
