@@ -1,5 +1,7 @@
 # redux.dart
 
+[![Build Status](https://api.travis-ci.org/johnpryan/redux.dart.svg?branch=master)](https://travis-ci.org/johnpryan/redux.dart)
+
 [Redux](http://redux.js.org/) for Dart using generics for typed State. For complete documentation, view the [API Docs](https://www.dartdocs.org/documentation/redux/latest/). It includes a rich ecosystem of [Middleware](#middleware), [Dev Tools](#dev-tools) and [platform integrations](#platform-integrations).
 
 ## Usage
