@@ -1,3 +1,7 @@
+# 2.0.1
+
+  * Add documentation highlighting the redux ecosystem
+
 # 2.0.0
 
   * *Breaking API Changes:*
