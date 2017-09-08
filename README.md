@@ -36,7 +36,7 @@ loggingMiddleware(Store<int> store, action, NextDispatcher next) {
 
 main() {
   final store = new Store<int>(
-    reducer, 
+    counterReducer, 
     initialState: 0, 
     middleware: [loggingMiddleware],
   );
