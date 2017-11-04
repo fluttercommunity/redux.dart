@@ -11,7 +11,10 @@ String reducer2(String state, action) {
   return state;
 }
 
-String stringReducer(String state, action) => action is String ? action : '';
+const notFound = 'not found';
+
+String stringReducer(String state, action) =>
+    action is String ? action : notFound;
 
 class StringReducer extends ReducerClass<String> {
   @override
@@ -54,3 +57,9 @@ class ExtraActionIfDispatchedIncrementMiddleware extends IncrementMiddleware {
     }
   }
 }
+
+class TestAction1 {}
+
+class TestAction2 {}
+
+class TestAction3 {}

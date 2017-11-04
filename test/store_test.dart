@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:test/test.dart';
-import 'utils.dart';
+import 'test_data.dart';
 
 main() {
   group('store', () {
@@ -16,20 +16,6 @@ main() {
         new StringReducer(),
         new isInstanceOf<Reducer<String>>(),
       );
-    });
-
-    test('when two reducers are combined, each reducer is invoked.', () {
-      final combinedReducer = combineReducers<String>([
-        reducer1,
-        reducer2,
-      ]);
-
-      final store = new Store(combinedReducer, initialState: 'hello');
-      expect(store.state, equals('hello'));
-      store.dispatch('helloReducer1');
-      expect(store.state, equals('reducer 1 reporting'));
-      store.dispatch('helloReducer2');
-      expect(store.state, equals('reducer 2 reporting'));
     });
 
     test('canceled subscriber should not be notified', () {
