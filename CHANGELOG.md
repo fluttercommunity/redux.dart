@@ -1,5 +1,9 @@
 # 2.0.3
 
+  * Use absolute urls to fix broken links in documentation on Pub.
+  
+# 2.0.3
+
   * Add MOAR documentation
   
 # 2.0.2

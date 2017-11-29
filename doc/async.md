@@ -1,6 +1,6 @@
 # Handling Async Code with Middleware
 
-In the [basics guide](./basics.md), we built a simple todo application. It was fully synchronous. Every time an action was dispatched, the state was updated immediately.
+In the [basics guide](https://github.com/johnpryan/redux.dart/blob/master/doc/basics.md), we built a simple todo application. It was fully synchronous. Every time an action was dispatched, the state was updated immediately.
 
 However, what if we wanted to Load our Todos from storage or a web service? This is where `Middleware` come in.
 
@@ -39,7 +39,7 @@ class FetchTodosFailedAction {
 
 ## State Shape
 
-In order to display `fetching` and `error` states in our UI, we'll need to update our `AppState` from the [basics](./basics.md) example with two new fields: `isFetching` and `error`. 
+In order to display `fetching` and `error` states in our UI, we'll need to update our `AppState` from the [basics](https://github.com/johnpryan/redux.dart/blob/master/doc/basics.md) example with two new fields: `isFetching` and `error`. 
 
 ```dart
 class AppState {
