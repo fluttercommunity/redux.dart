@@ -1,3 +1,11 @@
+# 2.0.3
+
+  * Add MOAR documentation
+  
+# 2.0.2
+
+  * Add type-safe `combineTypedReducers` and `combineTypedMiddleware` functions
+
 # 2.0.1
 
   * Add documentation highlighting the redux ecosystem

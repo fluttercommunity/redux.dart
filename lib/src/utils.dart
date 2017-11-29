@@ -100,7 +100,7 @@ class ReducerBinding<State, Action> {
 /// // We will then wire up specific types of actions to our reducer functions
 /// // above. This will return a new Reducer<AppState> which puts everything
 /// // together!.
-/// final Reducer<AppState> appReducer = bindActionToReducer([
+/// final Reducer<AppState> appReducer = combineTypedReducers([
 ///   new ReducerBinding<AppState, LoadTodosAction>(loadItemsReducer),
 ///   new ReducerBinding<AppState, UpdateItemsAction>(updateItemsReducer),
 ///   new ReducerBinding<AppState, AddItemAction>(addItemReducer),
@@ -227,7 +227,7 @@ class MiddlewareBinding<State, Action> {
 ///
 /// // We will then wire up specific types of actions to a List of Middleware
 /// // that handle those actions.
-/// final List<Middleware<AppState>> middleware = bindActionToMiddleware([
+/// final List<Middleware<AppState>> middleware = combineTypedMiddleware([
 ///   new MiddlewareBinder<AppState, LoadTodosAction>(loadItemsMiddleware),
 ///   new MiddlewareBinder<AppState, AddTodoAction>(saveItemsMiddleware),
 ///   new MiddlewareBinder<AppState, ClearCompletedAction>(saveItemsMiddleware),
