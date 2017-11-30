@@ -19,7 +19,7 @@ import 'dart:async';
 ///     }
 ///
 ///     final store = new Store<int>(counterReducer);
-typedef State Reducer<State>(State state, dynamic action);
+typedef State Reducer<State, Action>(State state, Action action);
 
 /// Defines a [Reducer] using a class interface.
 ///
@@ -44,8 +44,8 @@ typedef State Reducer<State>(State state, dynamic action);
 ///     }
 ///
 ///     final store = new Store<int>(new CounterReducer());
-abstract class ReducerClass<State> {
-  State call(State state, dynamic action);
+abstract class ReducerClass<State, Action> {
+  State call(State state, Action action);
 }
 
 /// A function that intercepts actions and potentially transform actions before
@@ -68,9 +68,9 @@ abstract class ReducerClass<State> {
 ///       counterReducer,
 ///       middleware: [loggingMiddleware],
 ///     );
-typedef void Middleware<State>(
-  Store<State> store,
-  dynamic action,
+typedef void Middleware<State, Action>(
+  Store<State, Action> store,
+  Action action,
   NextDispatcher next,
 );
 
@@ -97,8 +97,8 @@ typedef void Middleware<State>(
 ///       counterReducer,
 ///       middleware: [new LoggingMiddleware()],
 ///     );
-abstract class MiddlewareClass<State> {
-  void call(Store<State> store, dynamic action, NextDispatcher next);
+abstract class MiddlewareClass<State, Action> {
+  void call(Store<State, Action> store, Action action, NextDispatcher next);
 }
 
 /// The contract between one piece of middleware and the next in the chain. Use
@@ -108,7 +108,7 @@ abstract class MiddlewareClass<State> {
 /// Middleware can optionally pass the original action or a modified action to
 /// the next piece of middleware, or never call the next piece of middleware at
 /// all.
-typedef void NextDispatcher(dynamic action);
+typedef void NextDispatcher<Action>(Action action);
 
 /// Creates a Redux store that holds the app state tree.
 ///
@@ -150,17 +150,17 @@ typedef void NextDispatcher(dynamic action);
 ///     // Print the updated state. As an alternative, you can use the
 ///     // `store.onChange.listen` to respond to all state change events.
 ///     print(store.state); // prints "1"
-class Store<State> {
+class Store<State, Action> {
   State _state;
 
   /// Allows you to get the current reducer or replace it with a new one.
-  Reducer<State> reducer;
+  Reducer<State, Action> reducer;
   StreamController<State> _changeController;
   List<NextDispatcher> _dispatchers;
 
   Store(this.reducer,
       {State initialState,
-      List<Middleware<State>> middleware = const [],
+      List<Middleware<State, Action>> middleware = const [],
       bool syncStream: false})
       : _changeController = new StreamController.broadcast(sync: syncStream) {
     _state = initialState;
@@ -199,13 +199,13 @@ class Store<State> {
   // This will be called after all other middleware provided by the user have
   // been run. Its job is simple: Run the current state through the reducer,
   // save the result, and notify any subscribers.
-  _reduceAndNotify(dynamic action) {
+  _reduceAndNotify(Action action) {
     final state = reducer(_state, action);
     _state = state;
     _changeController.add(state);
   }
 
-  List<NextDispatcher> _createDispatchers(List<Middleware<State>> middleware) {
+  List<NextDispatcher> _createDispatchers(List<Middleware<State, Action>> middleware) {
     List<NextDispatcher> dispatchers = [];
 
     // Add _reduceAndNotify as our base dispatcher
@@ -214,7 +214,7 @@ class Store<State> {
     // Convert each [Middleware] into a [NextDispatcher]
     for (var nextMiddleware in middleware.reversed) {
       final next = dispatchers.last;
-      final dispatcher = (dynamic action) => nextMiddleware(this, action, next);
+      final dispatcher = (Action action) => nextMiddleware(this, action, next);
       dispatchers.add(dispatcher);
     }
 
@@ -225,7 +225,7 @@ class Store<State> {
   /// to the state using the given [Reducer]. Please note: [Middleware] can
   /// intercept actions, and can modify actions or stop them from passing
   /// through to the reducer.
-  void dispatch(dynamic action) {
+  void dispatch(Action action) {
     _dispatchers[0](action);
   }
 

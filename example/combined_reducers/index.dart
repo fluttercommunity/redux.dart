@@ -45,11 +45,11 @@ AppState clickCounterReducer(AppState state, action) {
 
 main() {
   // Create a new reducer and store for the app.
-  final combined = combineReducers<AppState>([
+  final combined = combineReducers<AppState, AppAction>([
     counterReducer,
     clickCounterReducer,
   ]);
-  final store = new Store<AppState>(
+  final store = new Store<AppState, AppAction>(
     combined,
     initialState: new AppState(0, 0),
   );

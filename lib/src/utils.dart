@@ -109,9 +109,9 @@ class ReducerBinding<State, Action> {
 ///   new ReducerBinding<AppState, ReverseItemAction>(reverseItemsReducer),
 /// ]);
 /// ```
-Reducer<State> combineTypedReducers<State>(
-    List<ReducerBinding<State, dynamic>> bindings) {
-  return (State state, action) {
+Reducer<State, Action> combineTypedReducers<State, Action>(
+    List<ReducerBinding<State, Action>> bindings) {
+  return (State state, Action action) {
     return bindings.fold(state, (currentState, binder) {
       if (binder.handlesAction(action)) {
         return binder.reducer(state, action);
@@ -124,7 +124,7 @@ Reducer<State> combineTypedReducers<State>(
 
 /// A type safe Middleware.
 typedef TypedMiddleware<State, Action> = void Function(
-  Store<State> store,
+  Store<State, Action> store,
   Action action,
   NextDispatcher next,
 );
@@ -236,14 +236,15 @@ class MiddlewareBinding<State, Action> {
 ///   new MiddlewareBinder<AppState, TodosLoadedAction>(saveItemsMiddleware),
 /// ]);
 /// ```
-List<Middleware<State>> combineTypedMiddleware<State>(
-    List<MiddlewareBinding<State, dynamic>> bindings) {
+List<Middleware<State, Action>> combineTypedMiddleware<State, Action>(
+    List<MiddlewareBinding<State, Action>> bindings) {
   return bindings
-      .map((binder) => (Store<State> store, action, NextDispatcher next) {
+      .map((binder) => (Store<State, Action> store, Action action,
+              NextDispatcher<Action> next) {
             if (binder.handlesAction(action)) {
-              binder.middleware(store, action, next);
+              return binder.middleware(store, action, next);
             } else {
-              next(action);
+              return next(action);
             }
           })
       .toList();
@@ -269,8 +270,9 @@ List<Middleware<State>> combineTypedMiddleware<State>(
 ///       helloReducer,
 ///       friendReducer,
 ///     );
-Reducer<State> combineReducers<State>(Iterable<Reducer<State>> reducers) {
-  return (State state, dynamic action) {
+Reducer<State, Action> combineReducers<State, Action>(
+    Iterable<Reducer<State, Action>> reducers) {
+  return (State state, Action action) {
     for (final reducer in reducers) {
       state = reducer(state, action);
     }

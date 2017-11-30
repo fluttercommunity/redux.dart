@@ -7,13 +7,13 @@ main() {
     test('can be defined as a Class', () {
       expect(
         new IncrementMiddleware(),
-        new isInstanceOf<Middleware<String>>(),
+        new isInstanceOf<Middleware<String, String>>(),
       );
     });
 
     test('are invoked by the store', () {
       final middleware = new IncrementMiddleware();
-      final store = new Store(
+      final store = new Store<String, String>(
         stringReducer,
         initialState: 'hello',
         middleware: [middleware],

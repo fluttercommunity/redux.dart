@@ -14,7 +14,7 @@ main() {
     test('reducers can be a Class', () {
       expect(
         new StringReducer(),
-        new isInstanceOf<Reducer<String>>(),
+        new isInstanceOf<Reducer<String, String>>(),
       );
     });
 

@@ -14,7 +14,7 @@ main() {
 
     group('Type Safe Combinations', () {
       test('are invoked when they match the Type of the dispatched action', () {
-        final store = new Store<String>(
+        final store = new Store<String, TestAction>(
           combineTypedReducers([
             new ReducerBinding<String, TestAction1>(testAction1Reducer),
             new ReducerBinding<String, TestAction2>(testAction2Reducer),
@@ -31,7 +31,7 @@ main() {
 
       test('are not invoked if they do not handle the action type', () {
         final initialState = 'hello';
-        final store = new Store<String>(
+        final store = new Store<String, TestAction>(
           combineTypedReducers([
             new ReducerBinding<String, TestAction1>(testAction1Reducer),
             new ReducerBinding<String, TestAction2>(testAction2Reducer),
@@ -49,7 +49,7 @@ main() {
 
     group('Dynamic Combinations', () {
       test('when two reducers are combined, each reducer is invoked.', () {
-        final combinedReducer = combineReducers<String>([
+        final combinedReducer = combineReducers<String, String>([
           reducer1,
           reducer2,
         ]);
@@ -66,24 +66,24 @@ main() {
 
   group('Typed Middleware', () {
     final testAction1Middleware = (
-      Store<String> store,
+      Store<String, TestAction> store,
       TestAction1 action,
       NextDispatcher next,
     ) {
-      next("testAction1Middleware called");
+      next(action);
     };
 
     final testAction2Middleware = (
-      Store<String> store,
+      Store<String, TestAction> store,
       TestAction2 action,
       NextDispatcher next,
     ) {
-      next("testAction2Middleware called");
+      next(action);
     };
 
     test('are invoked based on the type of action they accept', () {
-      final store = new Store<String>(
-        stringReducer,
+      final store = new Store<String, TestAction>(
+        testActionReducer,
         initialState: 'hello',
         middleware: combineTypedMiddleware([
           new MiddlewareBinding<String, TestAction1>(testAction1Middleware),
@@ -91,19 +91,21 @@ main() {
         ]),
       );
 
-      store.dispatch(new TestAction1());
-      expect(store.state, "testAction1Middleware called");
+      var action1 = new TestAction1();
+      store.dispatch(action1);
+      expect(store.state, "test action 1");
 
-      store.dispatch(new TestAction2());
-      expect(store.state, "testAction2Middleware called");
+      var action2 = new TestAction2();
+      store.dispatch(action2);
+      expect(store.state, "test action 2");
     });
 
     test(
         'are not invoked if they do not handle the Action and call the next piece of middleware in the chain',
         () {
       final initialState = 'hello';
-      final store = new Store<String>(
-        stringReducer,
+      final store = new Store<String, TestAction>(
+        testActionReducer,
         initialState: initialState,
         middleware: combineTypedMiddleware([
           new MiddlewareBinding<String, TestAction1>(testAction1Middleware),
@@ -112,7 +114,7 @@ main() {
 
       expect(store.state, initialState);
 
-      store.dispatch(new TestAction2());
+      store.dispatch(new UnsupportedTestAction());
 
       expect(store.state, notFound);
     });

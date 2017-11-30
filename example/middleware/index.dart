@@ -22,7 +22,8 @@ int counterReducer(int state, action) {
 
 // A piece of middleware that will log all actions with a timestamp to your
 // console!
-loggingMiddleware(Store<int> store, action, NextDispatcher next) {
+loggingMiddleware(
+    Store<int, Object> store, Object action, NextDispatcher next) {
   print('${new DateTime.now()}: $action');
 
   next(action);
@@ -30,10 +31,10 @@ loggingMiddleware(Store<int> store, action, NextDispatcher next) {
 
 main() {
   // Create a new reducer and store for the app.
-  final store = new Store<int>(
+  final store = new Store<int, String>(
     counterReducer,
     initialState: 0,
-    middleware: <Middleware<int>>[loggingMiddleware],
+    middleware: <Middleware<int, String>>[loggingMiddleware],
   );
 
   render(store.state);
