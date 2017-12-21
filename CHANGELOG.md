@@ -1,4 +1,8 @@
-# 2.0.3
+# 2.1.0
+
+  * Add the `distinct` option. If set to true, the Store will not emit onChange events if the new State that is returned from your [reducer] in response to an Action is equal to the previous state. False by default.
+
+# 2.0.4
 
   * Use absolute urls to fix broken links in documentation on Pub.
   

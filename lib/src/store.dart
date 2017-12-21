@@ -155,14 +155,6 @@ class Store<State> {
   /// replace it with a new one if need be.
   Reducer<State> reducer;
 
-  /// If set to true, the Store will not emit onChange events if the new State
-  /// that is returned from your [reducer] in response to an Action is equal to
-  /// the previous state.
-  ///
-  /// Under the hood, it will use the `==` method from your State class to
-  /// determine whether or not the two States are equal.
-  final bool distinct;
-
   final StreamController<State> _changeController;
   State _state;
   List<NextDispatcher> _dispatchers;
@@ -172,11 +164,21 @@ class Store<State> {
     State initialState,
     List<Middleware<State>> middleware = const [],
     bool syncStream: false,
-    this.distinct: false,
+
+    /// If set to true, the Store will not emit onChange events if the new State
+    /// that is returned from your [reducer] in response to an Action is equal
+    /// to the previous state.
+    ///
+    /// Under the hood, it will use the `==` method from your State class to
+    /// determine whether or not the two States are equal.
+    bool distinct: false,
   })
       : _changeController = new StreamController.broadcast(sync: syncStream) {
     _state = initialState;
-    _dispatchers = _createDispatchers(middleware);
+    _dispatchers = _createDispatchers(
+      middleware,
+      _createReduceAndNotify(distinct),
+    );
   }
 
   /// Returns the current state of the app
@@ -206,30 +208,27 @@ class Store<State> {
   ///     subscription.cancel();
   Stream<State> get onChange => _changeController.stream;
 
-  // The base [NextDispatcher].
+  // Creates the base [NextDispatcher].
   //
-  // This will be called after all other middleware provided by the user have
-  // been run. Its job is simple: Run the current state through the reducer,
-  // save the result, and notify any subscribers.
-  void _reduceAndNotify(dynamic action) {
-    final state = reducer(_state, action);
+  // The base NextDispatcher will be called after all other middleware provided
+  // by the user have been run. Its job is simple: Run the current state through
+  // the reducer, save the result, and notify any subscribers.
+  NextDispatcher _createReduceAndNotify(bool distinct) {
+    return (dynamic action) {
+      final state = reducer(_state, action);
 
-    if (distinct) {
-      if (state != _state) {
-        _updateState(state);
-      }
-    } else {
-      _updateState(state);
-    }
+      if (distinct && state == _state) return;
+
+      _state = state;
+      _changeController.add(state);
+    };
   }
 
-  void _updateState(State state) {
-    _state = state;
-    _changeController.add(state);
-  }
-
-  List<NextDispatcher> _createDispatchers(List<Middleware<State>> middleware) {
-    final dispatchers = <NextDispatcher>[]..add(_reduceAndNotify);
+  List<NextDispatcher> _createDispatchers(
+    List<Middleware<State>> middleware,
+    NextDispatcher reduceAndNotify,
+  ) {
+    final dispatchers = <NextDispatcher>[]..add(reduceAndNotify);
 
     // Convert each [Middleware] into a [NextDispatcher]
     for (var nextMiddleware in middleware.reversed) {
