@@ -1,26 +1,27 @@
-import 'dart:html';
 import 'dart:async';
+import 'dart:html';
 
 import 'package:redux/redux.dart';
 
-render(int state) {
-  querySelector('#value').innerHtml = '${state}';
+void render(int state) {
+  querySelector('#value').innerHtml = '$state';
 }
+
+enum Actions { increment, decrement }
 
 // Create a Reducer with a State (int) and an Action (String) Any dart object
 // can be used for Action and State.
-int counterReducer(int state, action) {
-  switch (action) {
-    case 'INCREMENT':
-      return state + 1;
-    case 'DECREMENT':
-      return state - 1;
-    default:
-      return state;
+int counterReducer(int state, dynamic action) {
+  if (action == Actions.increment) {
+    return state + 1;
+  } else if (action == Actions.decrement) {
+    return state - 1;
   }
+
+  return state;
 }
 
-main() {
+void main() {
   // Create a new reducer and store for the app.
   final store = new Store(counterReducer, initialState: 0);
 
@@ -28,20 +29,22 @@ main() {
   store.onChange.listen(render);
 
   querySelector('#increment').onClick.listen((_) {
-    store.dispatch('INCREMENT');
+    store.dispatch(Actions.increment);
   });
 
   querySelector('#decrement').onClick.listen((_) {
-    store.dispatch('DECREMENT');
+    store.dispatch(Actions.decrement);
   });
 
   querySelector('#incrementIfOdd').onClick.listen((_) {
-    if (store.state % 2 != 0) store.dispatch('INCREMENT');
+    if (store.state % 2 != 0) {
+      store.dispatch(Actions.increment);
+    }
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
-    new Future.delayed(new Duration(milliseconds: 1000)).then((_) {
-      store.dispatch('INCREMENT');
+    new Future<Null>.delayed(new Duration(milliseconds: 1000)).then((_) {
+      store.dispatch(Actions.increment);
     });
   });
 }
