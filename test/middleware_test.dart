@@ -2,12 +2,12 @@ import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 import 'test_data.dart';
 
-main() {
-  group('middleware', () {
+void main() {
+  group('Middleware', () {
     test('can be defined as a Class', () {
       expect(
         new IncrementMiddleware(),
-        new isInstanceOf<Middleware<String>>(),
+        const isInstanceOf<Middleware<String>>(),
       );
     });
 
@@ -32,7 +32,7 @@ main() {
         middleware: middleware,
       );
 
-      final order = [];
+      final order = <String>[];
       middleware1.invocations.listen((action) => order.add('first'));
       middleware2.invocations.listen((action) => order.add('second'));
 
@@ -51,7 +51,7 @@ main() {
         middleware: middleware,
       );
 
-      final order = [];
+      final order = <String>[];
       middleware1.invocations.listen((action) => order.add('first'));
       middleware2.invocations.listen((action) => order.add('second'));
 
@@ -71,7 +71,7 @@ main() {
         middleware: middleware,
       );
 
-      final order = [];
+      final order = <String>[];
       middleware1.invocations.listen((action) => order.add('first'));
       middleware2.invocations.listen((action) => order.add('second'));
 
@@ -95,7 +95,7 @@ main() {
         middleware: middleware,
       );
 
-      final order = [];
+      final order = <String>[];
       middleware1.invocations.listen((action) => order.add('first'));
       middleware2.invocations.listen((action) => order.add('second'));
 

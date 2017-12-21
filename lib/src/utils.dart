@@ -12,9 +12,7 @@ class ReducerBinding<State, Action> {
 
   ReducerBinding(this.reducer);
 
-  bool handlesAction(dynamic action) {
-    return action is Action;
-  }
+  bool handlesAction(dynamic action) => action is Action;
 }
 
 /// A convenience function for binding Reducers to Actions of a given Type. This
@@ -111,7 +109,7 @@ class ReducerBinding<State, Action> {
 /// ```
 Reducer<State> combineTypedReducers<State>(
     List<ReducerBinding<State, dynamic>> bindings) {
-  return (State state, action) {
+  return (State state, dynamic action) {
     return bindings.fold(state, (currentState, binder) {
       if (binder.handlesAction(action)) {
         return binder.reducer(state, action);
@@ -135,9 +133,7 @@ class MiddlewareBinding<State, Action> {
 
   MiddlewareBinding(this.middleware);
 
-  bool handlesAction(dynamic action) {
-    return action is Action;
-  }
+  bool handlesAction(dynamic action) => action is Action;
 }
 
 /// A convenience function for binding a piece of Middleware to an Action
@@ -239,7 +235,8 @@ class MiddlewareBinding<State, Action> {
 List<Middleware<State>> combineTypedMiddleware<State>(
     List<MiddlewareBinding<State, dynamic>> bindings) {
   return bindings
-      .map((binder) => (Store<State> store, action, NextDispatcher next) {
+      .map((binder) =>
+          (Store<State> store, dynamic action, NextDispatcher next) {
             if (binder.handlesAction(action)) {
               binder.middleware(store, action, next);
             } else {

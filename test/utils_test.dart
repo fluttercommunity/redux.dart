@@ -2,15 +2,13 @@ import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 import 'test_data.dart';
 
-main() {
+void main() {
   group('Combining Reducers', () {
-    final testAction1Reducer = (String state, TestAction1 action) {
-      return action.toString();
-    };
+    String testAction1Reducer(String state, TestAction1 action) =>
+        action.toString();
 
-    final testAction2Reducer = (String state, TestAction2 action) {
-      return action.toString();
-    };
+    String testAction2Reducer(String state, TestAction2 action) =>
+        action.toString();
 
     group('Type Safe Combinations', () {
       test('are invoked when they match the Type of the dispatched action', () {
@@ -23,10 +21,10 @@ main() {
         );
 
         store.dispatch(new TestAction1());
-        expect(store.state, contains("TestAction1"));
+        expect(store.state, contains('TestAction1'));
 
         store.dispatch(new TestAction2());
-        expect(store.state, contains("TestAction2"));
+        expect(store.state, contains('TestAction2'));
       });
 
       test('are not invoked if they do not handle the action type', () {
@@ -65,21 +63,21 @@ main() {
   });
 
   group('Typed Middleware', () {
-    final testAction1Middleware = (
+    void testAction1Middleware(
       Store<String> store,
       TestAction1 action,
       NextDispatcher next,
     ) {
-      next("testAction1Middleware called");
-    };
+      next('testAction1Middleware called');
+    }
 
-    final testAction2Middleware = (
+    void testAction2Middleware(
       Store<String> store,
       TestAction2 action,
       NextDispatcher next,
     ) {
-      next("testAction2Middleware called");
-    };
+      next('testAction2Middleware called');
+    }
 
     test('are invoked based on the type of action they accept', () {
       final store = new Store<String>(
@@ -92,10 +90,10 @@ main() {
       );
 
       store.dispatch(new TestAction1());
-      expect(store.state, "testAction1Middleware called");
+      expect(store.state, 'testAction1Middleware called');
 
       store.dispatch(new TestAction2());
-      expect(store.state, "testAction2Middleware called");
+      expect(store.state, 'testAction2Middleware called');
     });
 
     test(

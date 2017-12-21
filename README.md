@@ -13,7 +13,7 @@ import 'package:redux/redux.dart';
 // update the state of your application.
 enum Actions {
   increment,
-  decrement
+  decrement,
 }
 
 // Create a Reducer. A reducer is a pure function that takes the 
@@ -25,9 +25,9 @@ enum Actions {
 // side-effects, such as making an HTTP request or logging messages
 // to a console. For that, use Middleware.
 int counterReducer(int state, action) {
-  if (action is Actions.increment) {
+  if (action == Actions.increment) {
     return state + 1;
-  } else if (action is Actions.decrement) {
+  } else if (action == Actions.decrement) {
     return state - 1;
   }
   
@@ -115,7 +115,9 @@ To launch the examples in your browser:
 
 ## Dev Tools
 
-The [redux_dev_tools](https://pub.dartlang.org/packages/redux_dev_tools) library allows you to create a `DevToolsStore` during dev mode in place of a normal Redux `Store`. This `DevToolsStore` will act exactly like a normal `Store` at first, with one catch: It will allow you to travel back and forth throughout the State of your application!
+The [redux_dev_tools](https://pub.dartlang.org/packages/redux_dev_tools) library allows you to create a `DevToolsStore` during dev mode in place of a normal Redux `Store`. 
+
+This `DevToolsStore` will act exactly like a normal `Store` at first. However, it will also allow you to travel back and forth throughout the States of your app or recompute the State of your app by replaying all actions through your reducers. This works perfectly with Hot Reloading!
 
 You can combine the `DevToolsStore` with your own UI to travel in time, or use one of the existing options for the platform you're working with:
 

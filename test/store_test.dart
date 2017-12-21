@@ -2,8 +2,8 @@ import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 import 'test_data.dart';
 
-main() {
-  group('store', () {
+void main() {
+  group('Store', () {
     test('calls the reducer when an action is fired', () {
       final store = new Store(stringReducer, initialState: 'Hello');
       final action = 'test';
@@ -14,7 +14,7 @@ main() {
     test('reducers can be a Class', () {
       expect(
         new StringReducer(),
-        new isInstanceOf<Reducer<String>>(),
+        const isInstanceOf<Reducer<String>>(),
       );
     });
 
@@ -35,19 +35,40 @@ main() {
       });
 
       subscription.cancel();
-      store.dispatch("action");
+      store.dispatch('action');
       expect(subscriber1Called, isTrue);
       expect(subscriber2Called, isFalse);
     });
 
     test('store emits current state to subscribers', () {
       final action = 'test';
-      var stateFromOnChangeListener = 'incorrectState';
-      final store =
-          new Store(stringReducer, initialState: 'hello', syncStream: true);
-      store.onChange.listen((state) => stateFromOnChangeListener = state);
+      final states = <String>[];
+      final store = new Store<String>(
+        stringReducer,
+        initialState: 'hello',
+        syncStream: true,
+      );
+      store.onChange.listen((state) => states.add(state));
+
+      // Dispatch two actions. Both should be emitted by default.
       store.dispatch(action);
-      expect(stateFromOnChangeListener, equals(action));
+      store.dispatch(action);
+
+      expect(states, <String>[action, action]);
+    });
+
+    test('store does not emit an onChange if distinct', () {
+      final action = 'test';
+      final states = <String>[];
+      final store = new Store<String>(stringReducer,
+          initialState: 'hello', syncStream: true, distinct: true);
+      store.onChange.listen((state) => states.add(state));
+
+      // Dispatch two actions. Only one should be emitted b/c distinct is true
+      store.dispatch(action);
+      store.dispatch(action);
+
+      expect(states, <String>[action]);
     });
   });
 }

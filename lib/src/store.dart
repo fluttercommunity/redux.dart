@@ -151,17 +151,29 @@ typedef void NextDispatcher(dynamic action);
 ///     // `store.onChange.listen` to respond to all state change events.
 ///     print(store.state); // prints "1"
 class Store<State> {
-  State _state;
-
-  /// Allows you to get the current reducer or replace it with a new one.
+  /// The [Reducer] for your Store. Allows you to get the current reducer or
+  /// replace it with a new one if need be.
   Reducer<State> reducer;
-  StreamController<State> _changeController;
+
+  /// If set to true, the Store will not emit onChange events if the new State
+  /// that is returned from your [reducer] in response to an Action is equal to
+  /// the previous state.
+  ///
+  /// Under the hood, it will use the `==` method from your State class to
+  /// determine whether or not the two States are equal.
+  final bool distinct;
+
+  final StreamController<State> _changeController;
+  State _state;
   List<NextDispatcher> _dispatchers;
 
-  Store(this.reducer,
-      {State initialState,
-      List<Middleware<State>> middleware = const [],
-      bool syncStream: false})
+  Store(
+    this.reducer, {
+    State initialState,
+    List<Middleware<State>> middleware = const [],
+    bool syncStream: false,
+    this.distinct: false,
+  })
       : _changeController = new StreamController.broadcast(sync: syncStream) {
     _state = initialState;
     _dispatchers = _createDispatchers(middleware);
@@ -199,23 +211,33 @@ class Store<State> {
   // This will be called after all other middleware provided by the user have
   // been run. Its job is simple: Run the current state through the reducer,
   // save the result, and notify any subscribers.
-  _reduceAndNotify(dynamic action) {
+  void _reduceAndNotify(dynamic action) {
     final state = reducer(_state, action);
+
+    if (distinct) {
+      if (state != _state) {
+        _updateState(state);
+      }
+    } else {
+      _updateState(state);
+    }
+  }
+
+  void _updateState(State state) {
     _state = state;
     _changeController.add(state);
   }
 
   List<NextDispatcher> _createDispatchers(List<Middleware<State>> middleware) {
-    List<NextDispatcher> dispatchers = [];
-
-    // Add _reduceAndNotify as our base dispatcher
-    dispatchers.add(_reduceAndNotify);
+    final dispatchers = <NextDispatcher>[]..add(_reduceAndNotify);
 
     // Convert each [Middleware] into a [NextDispatcher]
     for (var nextMiddleware in middleware.reversed) {
       final next = dispatchers.last;
-      final dispatcher = (dynamic action) => nextMiddleware(this, action, next);
-      dispatchers.add(dispatcher);
+
+      dispatchers.add(
+        (dynamic action) => nextMiddleware(this, action, next),
+      );
     }
 
     return dispatchers.reversed.toList();
