@@ -16,7 +16,7 @@ void main() {
       final store = new Store(
         stringReducer,
         initialState: 'hello',
-        middleware: [middleware],
+        middleware: <Middleware<String>>[middleware],
       );
       store.dispatch('test');
       expect(middleware.counter, equals(1));
@@ -25,7 +25,7 @@ void main() {
     test('are applied in the correct order', () {
       final middleware1 = new IncrementMiddleware();
       final middleware2 = new IncrementMiddleware();
-      final middleware = [middleware1, middleware2];
+      final middleware = <Middleware<String>>[middleware1, middleware2];
       final store = new Store(
         stringReducer,
         initialState: 'hello',
@@ -44,7 +44,7 @@ void main() {
     test('actions can be dispatched multiple times', () {
       final middleware1 = new ExtraActionIncrementMiddleware();
       final middleware2 = new IncrementMiddleware();
-      final middleware = [middleware1, middleware2];
+      final middleware = <Middleware<String>>[middleware1, middleware2];
       final store = new Store(
         stringReducer,
         initialState: 'hello',
@@ -64,7 +64,7 @@ void main() {
     test('actions can be dispatched through entire chain', () {
       final middleware1 = new ExtraActionIfDispatchedIncrementMiddleware();
       final middleware2 = new IncrementMiddleware();
-      final middleware = [middleware1, middleware2];
+      final middleware = <Middleware<String>>[middleware1, middleware2];
       final store = new Store(
         stringReducer,
         initialState: 'hello',
@@ -88,7 +88,7 @@ void main() {
     test('actions can be dispatched through entire chain', () {
       final middleware1 = new ExtraActionIfDispatchedIncrementMiddleware();
       final middleware2 = new IncrementMiddleware();
-      final middleware = [middleware1, middleware2];
+      final middleware = <Middleware<String>>[middleware1, middleware2];
       final store = new Store(
         stringReducer,
         initialState: 'hello',
