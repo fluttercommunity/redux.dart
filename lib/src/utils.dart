@@ -1,22 +1,7 @@
 import 'package:redux/src/store.dart';
 
-/// A type safe Reducer
-typedef TypedReducer<State, Action> = State Function(
-  State state,
-  Action action,
-);
-
-/// A class that binds an Action of a given type to a specific TypedReducer
-class ReducerBinding<State, Action> {
-  final TypedReducer<State, Action> reducer;
-
-  ReducerBinding(this.reducer);
-
-  bool handlesAction(dynamic action) => action is Action;
-}
-
-/// A convenience function for binding Reducers to Actions of a given Type. This
-/// allows for type safe [Middleware] and reduces boilerplate.
+/// A convenience class for binding Reducers to Actions of a given Type. This
+/// allows for type safe [Reducer]s and reduces boilerplate.
 ///
 /// ### Example
 ///
@@ -98,45 +83,31 @@ class ReducerBinding<State, Action> {
 /// // We will then wire up specific types of actions to our reducer functions
 /// // above. This will return a new Reducer<AppState> which puts everything
 /// // together!.
-/// final Reducer<AppState> appReducer = combineTypedReducers([
-///   new ReducerBinding<AppState, LoadTodosAction>(loadItemsReducer),
-///   new ReducerBinding<AppState, UpdateItemsAction>(updateItemsReducer),
-///   new ReducerBinding<AppState, AddItemAction>(addItemReducer),
-///   new ReducerBinding<AppState, RemoveItemAction>(removeItemReducer),
-///   new ReducerBinding<AppState, ShuffleItemAction>(shuffleItemsReducer),
-///   new ReducerBinding<AppState, ReverseItemAction>(reverseItemsReducer),
+/// final Reducer<AppState> appReducer = combineReducers([
+///   new TypedReducer<AppState, LoadTodosAction>(loadItemsReducer),
+///   new TypedReducer<AppState, UpdateItemsAction>(updateItemsReducer),
+///   new TypedReducer<AppState, AddItemAction>(addItemReducer),
+///   new TypedReducer<AppState, RemoveItemAction>(removeItemReducer),
+///   new TypedReducer<AppState, ShuffleItemAction>(shuffleItemsReducer),
+///   new TypedReducer<AppState, ReverseItemAction>(reverseItemsReducer),
 /// ]);
 /// ```
-Reducer<State> combineTypedReducers<State>(
-    List<ReducerBinding<State, dynamic>> bindings) {
-  return (State state, dynamic action) {
-    return bindings.fold(state, (currentState, binder) {
-      if (binder.handlesAction(action)) {
-        return binder.reducer(state, action);
-      } else {
-        return currentState;
-      }
-    });
-  };
+class TypedReducer<State, Action> implements ReducerClass<State> {
+  final State Function(State state, Action action) reducer;
+
+  TypedReducer(this.reducer);
+
+  @override
+  State call(State state, dynamic action) {
+    if (action is Action) {
+      return reducer(state, action);
+    }
+
+    return state;
+  }
 }
 
-/// A type safe Middleware.
-typedef TypedMiddleware<State, Action> = void Function(
-  Store<State> store,
-  Action action,
-  NextDispatcher next,
-);
-
-/// A class that binds an Action of a given type to a specific TypedMiddleware
-class MiddlewareBinding<State, Action> {
-  final TypedMiddleware<State, Action> middleware;
-
-  MiddlewareBinding(this.middleware);
-
-  bool handlesAction(dynamic action) => action is Action;
-}
-
-/// A convenience function for binding a piece of Middleware to an Action
+/// A convenience type for binding a piece of Middleware to an Action
 /// of a specific type. Allows for Type Safe Middleware and reduces boilerplate.
 ///
 /// ### Example
@@ -213,7 +184,7 @@ class MiddlewareBinding<State, Action> {
 /// // remain dynamic.
 /// final saveItemsMiddleware = (
 ///   Store<AppState> store,
-///   action,
+///   dynamic action,
 ///   NextDispatcher next,
 /// ) {
 ///   next(action);
@@ -223,27 +194,32 @@ class MiddlewareBinding<State, Action> {
 ///
 /// // We will then wire up specific types of actions to a List of Middleware
 /// // that handle those actions.
-/// final List<Middleware<AppState>> middleware = combineTypedMiddleware([
-///   new MiddlewareBinder<AppState, LoadTodosAction>(loadItemsMiddleware),
-///   new MiddlewareBinder<AppState, AddTodoAction>(saveItemsMiddleware),
-///   new MiddlewareBinder<AppState, ClearCompletedAction>(saveItemsMiddleware),
-///   new MiddlewareBinder<AppState, ToggleAllAction>(saveItemsMiddleware),
-///   new MiddlewareBinder<AppState, UpdateTodoAction>(saveItemsMiddleware),
-///   new MiddlewareBinder<AppState, TodosLoadedAction>(saveItemsMiddleware),
-/// ]);
+/// final List<Middleware<AppState>> middleware = [
+///   new TypedMiddleware<AppState, LoadTodosAction>(loadItemsMiddleware),
+///   new TypedMiddleware<AppState, AddTodoAction>(saveItemsMiddleware),
+///   new TypedMiddleware<AppState, ClearCompletedAction>(saveItemsMiddleware),
+///   new TypedMiddleware<AppState, ToggleAllAction>(saveItemsMiddleware),
+///   new TypedMiddleware<AppState, UpdateTodoAction>(saveItemsMiddleware),
+///   new TypedMiddleware<AppState, TodosLoadedAction>(saveItemsMiddleware),
+/// ];
 /// ```
-List<Middleware<State>> combineTypedMiddleware<State>(
-    List<MiddlewareBinding<State, dynamic>> bindings) {
-  return bindings
-      .map((binder) =>
-          (Store<State> store, dynamic action, NextDispatcher next) {
-            if (binder.handlesAction(action)) {
-              binder.middleware(store, action, next);
-            } else {
-              next(action);
-            }
-          })
-      .toList();
+class TypedMiddleware<State, Action> implements MiddlewareClass<State> {
+  final void Function(
+    Store<State> store,
+    Action action,
+    NextDispatcher next,
+  ) middleware;
+
+  TypedMiddleware(this.middleware);
+
+  @override
+  void call(Store<State> store, dynamic action, NextDispatcher next) {
+    if (action is Action) {
+      middleware(store, action, next);
+    } else {
+      next(action);
+    }
+  }
 }
 
 /// Defines a utility function that combines several reducers.

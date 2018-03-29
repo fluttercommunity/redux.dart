@@ -1,3 +1,11 @@
+# 3.0.0
+
+  * Dart 2 support
+  * Remove `ReducerBinding`, use `TypedReducer` 
+  * Remove `combineTypedReducer`. Use `combineReducers` with normal reducers & `TypedReducer`s.
+  * Remove `MiddlewareBinding`, use `TypedMiddleware`.
+  * Remove `combineTypedMiddleware` -- no longer needed! Just create a normal `List<Middleware<State>>`!
+  
 # 2.1.1
 
   * Ensure the repo is 100% healthy. 

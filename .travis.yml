@@ -7,4 +7,3 @@ with_content_shell: false
 dart_task:
 - test: --platform vm
 - dartanalyzer: --fatal-warnings lib
-- dartfmt
