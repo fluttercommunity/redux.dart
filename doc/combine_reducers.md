@@ -68,7 +68,7 @@ AppState reducer(AppState state, action) {
 ## Combining Reducers
 
 Now, let's take a look at this same example with function composition. The app state reducer will work exactly as it 
-did before, but we'll break the reducer down into smaller parts!
+did before, but we'll break the reducer down into smaller parts.
 
 This will make it easier to split up and test your app, and even means you can move the reducer functions into their own 
 directories or even separate Dart packages!
@@ -166,11 +166,10 @@ AppState appStateReducer(AppState state, action) => new AppState(
 Now that we know how to compose (combine) reducers, we can look at some utilities in this library to help make this
 process easier.
 
-We'll focus on two utilities included with Redux: `combineTypedReducers` and `ReducerBinding`s.
+We'll focus on two utilities included with Redux: `combineReducers` and `TypedReducer`s.
 
-In this example, our `itemsReducer` will be created by the `combineTypedReducers` function. Instead of checking for each
-type of action and calling it manually, we can setup a list of `ReducerBinding`s.
-
+In this example, our `itemsReducer` will be created by the `combineReducers` function. Instead of checking for each
+type of action and calling it manually, we can setup a list of `TypedReducer`s.
 
 ```dart
 // Start with our same type-safe, smaller reducers we had before.
@@ -183,13 +182,13 @@ List<String> removeItemReducer(List<String> items, RemoveItemAction action) {
 }
 
 // Compose these smaller functions into the full `itemsReducer`.
-Reducer<List<String>> itemsReducer = combineTypedReducers([
-  // Each `ReducerBinding` will glue Actions of a certain type to the given 
+Reducer<List<String>> itemsReducer = combineReducers([
+  // Each `TypedReducer` will glue Actions of a certain type to the given 
   // reducer! This means you don't need to write a bunch of `if` checks 
-  // manually, and can quickly scan the list of `ReducerBinding`s to see what 
+  // manually, and can quickly scan the list of `TypedReducer`s to see what 
   // reducer handles what action.
-  new ReducerBinding<List<String>, AddItemAction>(addItemReducer),
-  new ReducerBinding<List<String>, RemoveItemAction>(removeItemReducer),
+  new TypedReducer<List<String>, AddItemAction>(addItemReducer),
+  new TypedReducer<List<String>, RemoveItemAction>(removeItemReducer),
 ]);
 
 // Use the new itemsReducer just like we did before

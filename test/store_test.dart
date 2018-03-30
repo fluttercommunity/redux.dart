@@ -1,27 +1,21 @@
 import 'package:redux/redux.dart';
 import 'package:test/test.dart';
+
 import 'test_data.dart';
 
 void main() {
   group('Store', () {
     test('calls the reducer when an action is fired', () {
-      final store = new Store(stringReducer, initialState: 'Hello');
+      final store = new Store<String>(stringReducer, initialState: 'Hello');
       final action = 'test';
       store.dispatch(action);
       expect(store.state, equals(action));
     });
 
-    test('reducers can be a Class', () {
-      expect(
-        new StringReducer(),
-        const isInstanceOf<Reducer<String>>(),
-      );
-    });
-
     test('canceled subscriber should not be notified', () {
       var subscriber1Called = false;
       var subscriber2Called = false;
-      final store = new Store(
+      final store = new Store<String>(
         stringReducer,
         initialState: 'hello',
         syncStream: true,

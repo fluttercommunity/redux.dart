@@ -4,10 +4,10 @@ authors:
 - Brian Egan <brian@brianegan.com>
 description: Redux for Dart
 homepage: http://github.com/johnpryan/redux.dart
-version: 2.1.1
+version: 3.0.0
 
 environment:
-  sdk: '>=1.24.0 <2.0.0'
+  sdk: '>=1.24.0 <3.0.0'
 
 dev_dependencies:
   browser: '>=0.10.0+2 <0.11.0'
