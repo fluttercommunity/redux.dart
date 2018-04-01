@@ -107,7 +107,7 @@ Cool -- so now we have a Reducer that handles async actions. But where do the `F
 
 ## Middleware
 
-Middleware are special functions that run *before* your dispatched actions reach your reducer. They can be used to listen for different actions and perform async calls, such as talking to a web server. Once they get a response from the web server, the can dispatch our `Success` or `Failure` actions!
+Middleware are special functions that run *before* your dispatched actions reach your reducer. They can be used to listen for different actions and perform async calls, such as talking to a web server. Once they get a response from the web server, they can dispatch our `Success` or `Failure` actions!
 
 Let's see how this works.
 
