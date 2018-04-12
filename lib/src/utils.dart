@@ -250,3 +250,30 @@ Reducer<State> combineReducers<State>(Iterable<Reducer<State>> reducers) {
     return state;
   };
 }
+
+/// Defines a utility function that combines several typed reducers.
+///
+/// This is a thin wrapper around [combineReducers] that is useful when Dart 2
+/// cannot infer the proper types. This can arise in situations such as the
+/// following:
+///
+///     combineReducers(new List()
+///       ..addAll(Screen1Redux.contributeReducers())
+///       ..addAll(Screen2Redux.contributeReducers()));
+///
+///     class Screen1Redux {
+///       static List<TypedReducer<String, dynamic>> contributeReducers() => ...
+///     }
+///
+///     class Screen2Redux {
+///       static List<TypedReducer<String, dynamic>> contributeReducers() => ...
+///     }
+///
+/// In these types of cases, Dart 2 would give the following error:
+///
+///     Error: A value of type 'dart.core::List<#libnull::TypedReducer<dart.core::String, dynamic>>' can't be assigned to a variable of type 'dart.core::Iterable<(dart.core::String, dynamic) → dart.core::String>'.
+Reducer<State> combineTypedReducers<State, Action>(
+    Iterable<TypedReducer<State, Action>> typedReducers) {
+  return combineReducers(
+      typedReducers.map((typedReducer) => typedReducer.call));
+}
