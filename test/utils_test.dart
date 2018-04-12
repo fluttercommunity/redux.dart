@@ -84,6 +84,28 @@ void main() {
     });
   });
 
+  group('combineTypedReducers', () {
+    test('works with inferred types', () {
+      List<TypedReducer<String, dynamic>> getTypedReducers() {
+        return [
+          new TypedReducer<String, TestAction1>(testAction1Reducer),
+          new TypedReducer<String, TestAction2>(testAction2Reducer),
+        ];
+      }
+
+      final store = new Store<String>(
+        combineTypedReducers<String, dynamic>(getTypedReducers()),
+        initialState: 'hello',
+      );
+
+      store.dispatch(new TestAction1());
+      expect(store.state, contains('TestAction1'));
+
+      store.dispatch(new TestAction2());
+      expect(store.state, contains('TestAction2'));
+    });
+  });
+
   group('Typed Middleware', () {
     void testAction1Middleware(
       Store<String> store,
