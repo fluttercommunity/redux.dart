@@ -94,7 +94,7 @@ void main() {
       }
 
       final store = new Store<String>(
-        combineTypedReducers(getTypedReducers()),
+        combineTypedReducers<String, dynamic>(getTypedReducers()),
         initialState: 'hello',
       );
 
