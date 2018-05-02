@@ -182,7 +182,7 @@ List<String> removeItemReducer(List<String> items, RemoveItemAction action) {
 }
 
 // Compose these smaller functions into the full `itemsReducer`.
-Reducer<List<String>> itemsReducer = combineReducers([
+Reducer<List<String>> itemsReducer = combineReducers<List<String>>([
   // Each `TypedReducer` will glue Actions of a certain type to the given 
   // reducer! This means you don't need to write a bunch of `if` checks 
   // manually, and can quickly scan the list of `TypedReducer`s to see what 
