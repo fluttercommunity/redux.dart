@@ -65,20 +65,25 @@ import 'package:redux/src/store.dart';
 /// final loadItemsReducer = (AppState state, LoadTodosAction action) =>
 ///   return new AppState(action.items);
 ///
-/// final updateItemsReducer = (AppState state, UpdateItemsAction action) =>
+/// final updateItemsReducer = (AppState state, UpdateItemsAction action) {
 ///   return ...;
+/// }
 ///
-/// final addItemReducer = (AppState state, AddItemAction action) =>
+/// final addItemReducer = (AppState state, AddItemAction action) {
 ///   return ...;
+/// }
 ///
-/// final removeItemReducer = (AppState state, RemoveItemAction action) =>
+/// final removeItemReducer = (AppState state, RemoveItemAction action) {
 ///   return ...;
+/// }
 ///
-/// final shuffleItemsReducer = (AppState state, ShuffleItemAction action) =>
+/// final shuffleItemsReducer = (AppState state, ShuffleItemAction action) {
 ///   return ...;
+/// }
 ///
-/// final reverseItemsReducer = (AppState state, ReverseItemAction action) =>
+/// final reverseItemsReducer = (AppState state, ReverseItemAction action) {
 ///   return ...;
+/// }
 ///
 /// // We will then wire up specific types of actions to our reducer functions
 /// // above. This will return a new Reducer<AppState> which puts everything
