@@ -1,3 +1,7 @@
+# 3.0.1
+
+  * Update README based on feedback
+
 # 3.0.0
 
   * Dart 2 support
