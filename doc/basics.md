@@ -12,7 +12,7 @@ This page attempts to give you a high-level overview of how to use Redux. It cov
 
 First, let's define some actions.
 
-*Actions* are payloads of information that send data from your application to your store. They are the only source of information for the store. You send them to the store using store.dispatch().
+*Actions* are payloads of information that send data from your application to your store. They are the only source of information for the store. You send them to the store using `store.dispatch()`.
 
 Here's an example action which represents adding a new todo item:
 
@@ -20,7 +20,7 @@ Here's an example action which represents adding a new todo item:
 class AddTodoAction {
   final Todo todo;
   
-  AddTodo(this.todo);
+  AddTodoAction(this.todo);
 }
 ```
 
@@ -140,9 +140,9 @@ In the previous sections, we defined the actions that represent the facts about 
 
 The Store is the object that brings them together. The store has the following responsibilities:
 
-  * Holds application state;
+  * Holds application state
   * Allows you to set the initialState 
-  * Allows access to state via the `state` getter;
+  * Allows access to state via the `state` getter
   * Allows state to be updated via `dispatch(action)`
   * Registers state change listeners via `onChange.listen()`
 
