@@ -215,9 +215,12 @@ class Store<State> {
   // the reducer, save the result, and notify any subscribers.
   NextDispatcher _createReduceAndNotify(bool distinct) {
     return (dynamic action) {
+
+      final oldHashCode = _state.hashCode;
+
       final state = reducer(_state, action);
 
-      if (distinct && state == _state) return;
+      if (distinct && state.hashCode == oldHashCode) return;
 
       _state = state;
       _changeController.add(state);
