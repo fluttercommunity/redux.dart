@@ -76,7 +76,7 @@ AppState todosReducer(AppState state, action) {
     );
   } else if (action is FetchTodosSucceededAction) {
     return new AppState(
-      // Set our actions to the fetched Todos
+      // Set our todos to the fetched Todos
       todos: action.fetchedTodos,
       // Toggle isFetching to false so our UI will render the todos 
       // instead of a loading spinner.
@@ -87,7 +87,7 @@ AppState todosReducer(AppState state, action) {
     );    
   } else if (action is FetchTodosFailedAction) {
     return new AppState(
-      // Set our actions to an empty value
+      // Set our todos to an empty value
       todos: const [],
       // Toggle isFetching to false
       isFetching: false,
