@@ -9,5 +9,8 @@ version: 3.0.1
 environment:
   sdk: '>=1.24.0 <3.0.0'
 
+dependencies:
+  rxdart: ^0.22.2
+
 dev_dependencies:
   test: '>=0.12.24+2 <2.0.0'

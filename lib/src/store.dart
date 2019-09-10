@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 /// Defines an application's state change
 ///
@@ -155,7 +156,7 @@ class Store<State> {
   /// replace it with a new one if need be.
   Reducer<State> reducer;
 
-  final StreamController<State> _changeController;
+  final Subject<State> _changeController;
   State _state;
   List<NextDispatcher> _dispatchers;
 
@@ -164,7 +165,7 @@ class Store<State> {
     State initialState,
     List<Middleware<State>> middleware = const [],
     bool syncStream: false,
-
+    bool useBehaviorSubject: false,
     /// If set to true, the Store will not emit onChange events if the new State
     /// that is returned from your [reducer] in response to an Action is equal
     /// to the previous state.
@@ -173,7 +174,7 @@ class Store<State> {
     /// determine whether or not the two States are equal.
     bool distinct: false,
   })
-      : _changeController = new StreamController.broadcast(sync: syncStream) {
+      : _changeController = useBehaviorSubject ? new BehaviorSubject<State>.seeded(initialState, sync: syncStream) : new PublishSubject(sync: syncStream) {
     _state = initialState;
     _dispatchers = _createDispatchers(
       middleware,
@@ -206,7 +207,7 @@ class Store<State> {
   ///     // When you want to stop printing the state to the console, simply
   ///     `cancel` your `subscription`.
   ///     subscription.cancel();
-  Stream<State> get onChange => _changeController.stream;
+  Observable<State> get onChange => _changeController.stream;
 
   // Creates the base [NextDispatcher].
   //
