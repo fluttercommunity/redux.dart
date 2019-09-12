@@ -68,7 +68,7 @@ abstract class ReducerClass<State> {
 ///       counterReducer,
 ///       middleware: [loggingMiddleware],
 ///     );
-typedef void Middleware<State>(
+typedef dynamic Middleware<State>(
   Store<State> store,
   dynamic action,
   NextDispatcher next,
@@ -98,7 +98,7 @@ typedef void Middleware<State>(
 ///       middleware: [new LoggingMiddleware()],
 ///     );
 abstract class MiddlewareClass<State> {
-  void call(Store<State> store, dynamic action, NextDispatcher next);
+  dynamic call(Store<State> store, dynamic action, NextDispatcher next);
 }
 
 /// The contract between one piece of middleware and the next in the chain. Use
@@ -108,7 +108,7 @@ abstract class MiddlewareClass<State> {
 /// Middleware can optionally pass the original action or a modified action to
 /// the next piece of middleware, or never call the next piece of middleware at
 /// all.
-typedef void NextDispatcher(dynamic action);
+typedef dynamic NextDispatcher(dynamic action);
 
 /// Creates a Redux store that holds the app state tree.
 ///
@@ -246,8 +246,8 @@ class Store<State> {
   /// to the state using the given [Reducer]. Please note: [Middleware] can
   /// intercept actions, and can modify actions or stop them from passing
   /// through to the reducer.
-  void dispatch(dynamic action) {
-    _dispatchers[0](action);
+  dynamic dispatch(dynamic action) {
+    return _dispatchers[0](action);
   }
 
   /// Closes down the Store so it will no longer be operational. Only use this

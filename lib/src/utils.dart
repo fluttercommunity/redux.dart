@@ -218,11 +218,11 @@ class TypedMiddleware<State, Action> implements MiddlewareClass<State> {
   TypedMiddleware(this.middleware);
 
   @override
-  void call(Store<State> store, dynamic action, NextDispatcher next) {
+  dynamic call(Store<State> store, dynamic action, NextDispatcher next) {
     if (action is Action) {
-      middleware(store, action, next);
+      return middleware(store, action, next);
     } else {
-      next(action);
+      return next(action);
     }
   }
 }
