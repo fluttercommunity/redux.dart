@@ -1,6 +1,7 @@
 # redux.dart
 
 [![Build Status](https://api.travis-ci.org/johnpryan/redux.dart.svg?branch=master)](https://travis-ci.org/johnpryan/redux.dart)
+[![codecov](https://codecov.io/gh/johnpryan/redux.dart/branch/master/graph/badge.svg)](https://codecov.io/gh/johnpryan/redux.dart)
 
 [Redux](http://redux.js.org/) for Dart using generics for typed State. It includes a rich ecosystem of [Docs](#docs), [Middleware](#middleware), [Dev Tools](#dev-tools) and can be combined with Flutter using the [flutter_redux](https://pub.dartlang.org/packages/flutter_redux) package.
 

@@ -5,6 +5,7 @@
   * Enforce Pedantic package lint rules
   * Enforce `public_member_api_docs` lint rule and add docs to missing parts
   * Update `travis.yml` with support for dartfmt, analysis, and code coverage
+  * Add coverage badge to root README
   * Pub.dev updates
     * Longer description
     * https for package url
