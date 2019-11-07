@@ -190,8 +190,7 @@ class Store<State> {
     /// Under the hood, it will use the `==` method from your State class to
     /// determine whether or not the two States are equal.
     bool distinct = false,
-  })
-      : _changeController = StreamController.broadcast(sync: syncStream) {
+  }) : _changeController = StreamController.broadcast(sync: syncStream) {
     _state = initialState;
     _dispatchers = _createDispatchers(
       middleware,
