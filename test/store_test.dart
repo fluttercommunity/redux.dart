@@ -6,7 +6,7 @@ import 'test_data.dart';
 void main() {
   group('Store', () {
     test('calls the reducer when an action is fired', () {
-      final store = new Store<String>(stringReducer, initialState: 'Hello');
+      final store = Store<String>(stringReducer, initialState: 'Hello');
       final action = 'test';
       store.dispatch(action);
       expect(store.state, equals(action));
@@ -15,7 +15,7 @@ void main() {
     test('canceled subscriber should not be notified', () {
       var subscriber1Called = false;
       var subscriber2Called = false;
-      final store = new Store<String>(
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         syncStream: true,
@@ -37,7 +37,7 @@ void main() {
     test('store emits current state to subscribers', () {
       final action = 'test';
       final states = <String>[];
-      final store = new Store<String>(
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         syncStream: true,
@@ -54,7 +54,7 @@ void main() {
     test('store does not emit an onChange if distinct', () {
       final action = 'test';
       final states = <String>[];
-      final store = new Store<String>(stringReducer,
+      final store = Store<String>(stringReducer,
           initialState: 'hello', syncStream: true, distinct: true);
       store.onChange.listen((state) => states.add(state));
 

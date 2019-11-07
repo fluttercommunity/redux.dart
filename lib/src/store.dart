@@ -45,6 +45,8 @@ typedef State Reducer<State>(State state, dynamic action);
 ///
 ///     final store = new Store<int>(new CounterReducer());
 abstract class ReducerClass<State> {
+  /// The [Reducer] function that converts the current state and action into a
+  /// new state
   State call(State state, dynamic action);
 }
 
@@ -98,6 +100,7 @@ typedef void Middleware<State>(
 ///       middleware: [new LoggingMiddleware()],
 ///     );
 abstract class MiddlewareClass<State> {
+  /// A [Middleware] function that intercepts a dispatched action
   void call(Store<State> store, dynamic action, NextDispatcher next);
 }
 
@@ -159,11 +162,26 @@ class Store<State> {
   State _state;
   List<NextDispatcher> _dispatchers;
 
+  /// Creates an instance of a Redux Store.
+  ///
+  /// The [reducer] argument specifies how the state should be changed in
+  /// response to dispatched actions.
+  ///
+  /// The optional [initialState] argument defines the State of the store when
+  /// the Store is first created.
+  ///
+  /// The optional [middleware] argument takes a list of [Middleware] functions
+  /// or [MiddlewareClass]. See the [Middleware] documentation for information
+  /// on how they are used.
+  ///
+  /// The [syncStream] argument allows you to use a synchronous
+  /// [StreamController] instead of an async `StreamController` under the hood.
+  /// By default, the Stream is async.
   Store(
     this.reducer, {
     State initialState,
     List<Middleware<State>> middleware = const [],
-    bool syncStream: false,
+    bool syncStream = false,
 
     /// If set to true, the Store will not emit onChange events if the new State
     /// that is returned from your [reducer] in response to an Action is equal
@@ -171,9 +189,9 @@ class Store<State> {
     ///
     /// Under the hood, it will use the `==` method from your State class to
     /// determine whether or not the two States are equal.
-    bool distinct: false,
+    bool distinct = false,
   })
-      : _changeController = new StreamController.broadcast(sync: syncStream) {
+      : _changeController = StreamController.broadcast(sync: syncStream) {
     _state = initialState;
     _dispatchers = _createDispatchers(
       middleware,
@@ -246,8 +264,9 @@ class Store<State> {
   /// to the state using the given [Reducer]. Please note: [Middleware] can
   /// intercept actions, and can modify actions or stop them from passing
   /// through to the reducer.
-  void dispatch(dynamic action) {
+  dynamic dispatch(dynamic action) {
     _dispatchers[0](action);
+    return action;
   }
 
   /// Closes down the Store so it will no longer be operational. Only use this

@@ -30,7 +30,7 @@ int counterReducer(int state, dynamic action) {
 
 void main() {
   // Create a new reducer and store for the app.
-  final store = new Store(counterReducer, initialState: 0);
+  final store = Store(counterReducer, initialState: 0);
 
   render(store.state);
   store.onChange.listen(render);
@@ -50,7 +50,7 @@ void main() {
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
-    new Future<Null>.delayed(new Duration(milliseconds: 1000)).then((_) {
+    Future<Null>.delayed(Duration(milliseconds: 1000)).then((_) {
       store.dispatch(Actions.increment);
     });
   });

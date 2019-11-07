@@ -1,3 +1,15 @@
+# 4.0.0
+
+  * `dispatch` returns the provided action 
+  * Removed Dart 1.x support
+  * Enforce Pedantic package lint rules
+  * Enforce `public_member_api_docs` lint rule and add docs to missing parts
+  * Update `travis.yml` with support for dartfmt, analysis, and code coverage
+  * Pub.dev updates
+    * Longer description
+    * https for package url
+    * update example folder to include README
+
 # 3.0.1
 
   * Update README based on feedback

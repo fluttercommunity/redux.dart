@@ -12,23 +12,23 @@ void main() {
 
   group('Typed Reducers', () {
     test('can be used standalone', () {
-      final store = new Store<String>(
-        new TypedReducer<String, TestAction1>(testAction1Reducer),
+      final store = Store<String>(
+        TypedReducer<String, TestAction1>(testAction1Reducer),
         initialState: 'hello',
       );
 
-      store.dispatch(new TestAction1());
+      store.dispatch(TestAction1());
       expect(store.state, contains('TestAction1'));
     });
 
     test('are not invoked if they do not handle the action type', () {
       final initialState = 'hello';
-      final store = new Store<String>(
-        new TypedReducer<String, TestAction1>(testAction1Reducer),
+      final store = Store<String>(
+        TypedReducer<String, TestAction1>(testAction1Reducer),
         initialState: initialState,
       );
 
-      store.dispatch(new TestAction3());
+      store.dispatch(TestAction3());
 
       // Since TestAction3 does not match any ReducerBindings, the state
       // should not be changed after dispatching TestAction3.
@@ -43,7 +43,7 @@ void main() {
         reducer2,
       ]);
 
-      final store = new Store(combinedReducer, initialState: 'hello');
+      final store = Store(combinedReducer, initialState: 'hello');
       expect(store.state, equals('hello'));
       store.dispatch('helloReducer1');
       expect(store.state, equals('reducer 1 reporting'));
@@ -52,26 +52,26 @@ void main() {
     });
 
     test('works with TypedReducers', () {
-      final store = new Store<String>(
+      final store = Store<String>(
         combineReducers([
-          new TypedReducer<String, TestAction1>(testAction1Reducer),
-          new TypedReducer<String, TestAction2>(testAction2Reducer),
+          TypedReducer<String, TestAction1>(testAction1Reducer),
+          TypedReducer<String, TestAction2>(testAction2Reducer),
         ]),
         initialState: 'hello',
       );
 
-      store.dispatch(new TestAction1());
+      store.dispatch(TestAction1());
       expect(store.state, contains('TestAction1'));
 
-      store.dispatch(new TestAction2());
+      store.dispatch(TestAction2());
       expect(store.state, contains('TestAction2'));
     });
 
     test('can combine typed with non-typed reducers', () {
-      final store = new Store<String>(
+      final store = Store<String>(
         combineReducers([
           reducer1,
-          new TypedReducer<String, TestAction2>(testAction2Reducer),
+          TypedReducer<String, TestAction2>(testAction2Reducer),
         ]),
         initialState: 'hello',
       );
@@ -79,7 +79,7 @@ void main() {
       store.dispatch('helloReducer1');
       expect(store.state, equals('reducer 1 reporting'));
 
-      store.dispatch(new TestAction2());
+      store.dispatch(TestAction2());
       expect(store.state, contains('TestAction2'));
     });
   });
@@ -102,19 +102,19 @@ void main() {
     }
 
     test('are invoked based on the type of action they accept', () {
-      final store = new Store<String>(
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         middleware: [
-          new TypedMiddleware<String, TestAction1>(testAction1Middleware),
-          new TypedMiddleware<String, TestAction2>(testAction2Middleware),
+          TypedMiddleware<String, TestAction1>(testAction1Middleware),
+          TypedMiddleware<String, TestAction2>(testAction2Middleware),
         ],
       );
 
-      store.dispatch(new TestAction1());
+      store.dispatch(TestAction1());
       expect(store.state, 'testAction1Middleware called');
 
-      store.dispatch(new TestAction2());
+      store.dispatch(TestAction2());
       expect(store.state, 'testAction2Middleware called');
     });
 
@@ -122,35 +122,35 @@ void main() {
         'are not invoked if they do not handle the Action and call the next piece of middleware in the chain',
         () {
       final initialState = 'hello';
-      final store = new Store<String>(
+      final store = Store<String>(
         stringReducer,
         initialState: initialState,
         middleware: [
-          new TypedMiddleware<String, TestAction1>(testAction1Middleware),
+          TypedMiddleware<String, TestAction1>(testAction1Middleware),
         ],
       );
 
       expect(store.state, initialState);
 
-      store.dispatch(new TestAction2());
+      store.dispatch(TestAction2());
 
       expect(store.state, notFound);
     });
 
     test('works with a function that has a dynamic action', () {
       final initialState = 'hello';
-      final incrementMiddleware = new IncrementMiddleware();
-      final store = new Store<String>(
+      final incrementMiddleware = IncrementMiddleware();
+      final store = Store<String>(
         stringReducer,
         initialState: initialState,
         middleware: [
-          new TypedMiddleware<String, TestAction1>(incrementMiddleware),
-          new TypedMiddleware<String, TestAction2>(incrementMiddleware),
+          TypedMiddleware<String, TestAction1>(incrementMiddleware),
+          TypedMiddleware<String, TestAction2>(incrementMiddleware),
         ],
       );
 
-      store.dispatch(new TestAction1());
-      store.dispatch(new TestAction2());
+      store.dispatch(TestAction1());
+      store.dispatch(TestAction2());
 
       expect(incrementMiddleware.counter, 2);
     });
