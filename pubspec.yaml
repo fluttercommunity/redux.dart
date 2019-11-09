@@ -2,12 +2,14 @@ name: redux
 authors:
 - John Ryan <john.p.ryan4@gmail.com>
 - Brian Egan <brian@brianegan.com>
-description: Redux for Dart
-homepage: http://github.com/johnpryan/redux.dart
-version: 3.0.1
+description: Redux is a predictable state container for Dart and Flutter apps
+homepage: https://github.com/johnpryan/redux.dart
+version: 4.0.0
 
 environment:
-  sdk: '>=1.24.0 <3.0.0'
+  sdk: '>=2.0.0 <3.0.0'
 
 dev_dependencies:
-  test: '>=0.12.24+2 <2.0.0'
+  test: '>=1.0.0 <2.0.0'
+  pedantic: ">=1.8.0+1 <2.0.0"
+  coverage: ">=0.13.0 <0.14.0"

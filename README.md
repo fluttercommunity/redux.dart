@@ -1,18 +1,10 @@
 # redux.dart
 
 [![Build Status](https://api.travis-ci.org/johnpryan/redux.dart.svg?branch=master)](https://travis-ci.org/johnpryan/redux.dart)
+[![codecov](https://codecov.io/gh/johnpryan/redux.dart/branch/master/graph/badge.svg)](https://codecov.io/gh/johnpryan/redux.dart)
 
 [Redux](http://redux.js.org/) for Dart using generics for typed State. It includes a rich ecosystem of [Docs](#docs), [Middleware](#middleware), [Dev Tools](#dev-tools) and can be combined with Flutter using the [flutter_redux](https://pub.dartlang.org/packages/flutter_redux) package.
 
-## Redux 3.0.0 Migration & Dart 2 support
-
-In order to support Dart 2, some of the APIs needed to change. The good news: This actually simplifies Redux! The bad news: you may need to update your projects.
-
-  * Change `ReducerBinding` to `TypedReducer` 
-  * Remove `combineTypedReducer`. Use `combineReducers` with a combination of normal reducers and/or `TypedReducer`s.
-  * Change `MiddlewareBinding` to `TypedMiddleware`.
-  * Remove `combineTypedMiddleware` -- no longer needed! Just create a normal `List<Middleware<State>>`!
-  
 ## Docs
 
   * [Motivation and Principles](https://github.com/johnpryan/redux.dart/blob/master/doc/why.md) - Learn why Redux might make sense for your app and the principles behind it.

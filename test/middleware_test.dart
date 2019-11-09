@@ -6,8 +6,8 @@ import 'test_data.dart';
 void main() {
   group('Middleware', () {
     test('are invoked by the store', () {
-      final middleware = new IncrementMiddleware();
-      final store = new Store<String>(
+      final middleware = IncrementMiddleware();
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         middleware: [middleware],
@@ -17,9 +17,9 @@ void main() {
     });
 
     test('are applied in the correct order', () {
-      final middleware1 = new IncrementMiddleware();
-      final middleware2 = new IncrementMiddleware();
-      final store = new Store<String>(
+      final middleware1 = IncrementMiddleware();
+      final middleware2 = IncrementMiddleware();
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         middleware: [middleware1, middleware2],
@@ -35,9 +35,9 @@ void main() {
     });
 
     test('actions can be dispatched multiple times', () {
-      final middleware1 = new ExtraActionIncrementMiddleware();
-      final middleware2 = new IncrementMiddleware();
-      final store = new Store<String>(
+      final middleware1 = ExtraActionIncrementMiddleware();
+      final middleware2 = IncrementMiddleware();
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         middleware: [middleware1, middleware2],
@@ -54,9 +54,9 @@ void main() {
     });
 
     test('actions can be dispatched through entire chain', () {
-      final middleware1 = new ExtraActionIfDispatchedIncrementMiddleware();
-      final middleware2 = new IncrementMiddleware();
-      final store = new Store<String>(
+      final middleware1 = ExtraActionIfDispatchedIncrementMiddleware();
+      final middleware2 = IncrementMiddleware();
+      final store = Store<String>(
         stringReducer,
         initialState: 'hello',
         middleware: [middleware1, middleware2],
