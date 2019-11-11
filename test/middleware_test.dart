@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'dart:async';
 import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 
@@ -79,20 +78,20 @@ void main() {
     });
 
     test('dispatch returns the value from middleware', () async {
-      final middleware1 = PassThroughMiddleware();
-      final middleware2 = ThunkMiddleware();
-      final ThunkAction<String> thunkAction = (store) async {
-        await sleep(Duration(milliseconds: 300));
+      final passthrough = PassThroughMiddleware<String>();
+      final thunk = ThunkMiddleware<String>();
+      Future<void> thunkAction(Store<String> store) async {
+        await Future<void>.delayed(Duration(milliseconds: 5));
         store.dispatch("changed");
-      };
+      }
 
       final store = Store<String>(
-          stringReducer,
-          initialState: 'hello',
-          middleware: [middleware1, middleware2]
+        stringReducer,
+        initialState: 'hello',
+        middleware: [passthrough, thunk],
       );
 
-      final awaitableAction = store.dispatch(thunkAction);
+      final awaitableAction = store.dispatch(thunkAction) as Future<void>;
 
       // Did not change yet
       expect(store.state, equals('hello'));
@@ -100,6 +99,5 @@ void main() {
       // The effect has taken place
       expect(store.state, equals('changed'));
     });
-
   });
 }
