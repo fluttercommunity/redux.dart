@@ -29,8 +29,8 @@ class StringReducer extends ReducerClass<String> {
 class IncrementMiddleware extends MiddlewareClass<String> {
   int counter = 0;
   final _invocationsController =
-  new StreamController<String>.broadcast(sync: true);
-
+      StreamController<String>.broadcast(sync: true);
+  
   Stream<String> get invocations => _invocationsController.stream;
 
   @override

@@ -31,14 +31,14 @@ int counterReducer(int state, dynamic action) {
 // A piece of middleware that will log all actions with a timestamp to your
 // console!
 void loggingMiddleware(Store<int> store, dynamic action, NextDispatcher next) {
-  print('${new DateTime.now()}: $action');
+  print('${DateTime.now()}: $action');
 
   next(action);
 }
 
 void main() {
   // Create a new reducer and store for the app.
-  final store = new Store<int>(
+  final store = Store<int>(
     counterReducer,
     initialState: 0,
     middleware: <Middleware<int>>[loggingMiddleware],
@@ -62,7 +62,7 @@ void main() {
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
-    new Future<Null>.delayed(new Duration(milliseconds: 1000)).then((_) {
+    Future<Null>.delayed(Duration(milliseconds: 1000)).then((_) {
       store.dispatch(Actions.increment);
     });
   });

@@ -98,8 +98,11 @@ import 'package:redux/src/store.dart';
 /// ]);
 /// ```
 class TypedReducer<State, Action> implements ReducerClass<State> {
+  /// A [Reducer] function that only accepts an action of a specific type
   final State Function(State state, Action action) reducer;
 
+  /// Creates a reducer that will only be executed if the dispatched action
+  /// matches the [Action] type.
   TypedReducer(this.reducer);
 
   @override
@@ -209,12 +212,15 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
 /// ];
 /// ```
 class TypedMiddleware<State, Action> implements MiddlewareClass<State> {
+  /// A [Middleware] function that only works on actions of a specific type.
   final void Function(
     Store<State> store,
     Action action,
     NextDispatcher next,
   ) middleware;
 
+  /// Create a [Middleware] that is only executed when the dispatched action
+  /// matches the [Action] type.
   TypedMiddleware(this.middleware);
 
   @override

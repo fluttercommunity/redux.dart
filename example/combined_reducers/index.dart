@@ -28,10 +28,10 @@ enum AppAction { increment, decrement }
 // to a console. For that, use Middleware.
 AppState counterReducer(AppState state, dynamic action) {
   if (action == AppAction.increment) {
-    return new AppState(state.count + 1, state.clickCount);
+    return AppState(state.count + 1, state.clickCount);
   }
   if (action == AppAction.decrement) {
-    return new AppState(state.count - 1, state.clickCount);
+    return AppState(state.count - 1, state.clickCount);
   }
 
   return state;
@@ -41,10 +41,10 @@ AppState counterReducer(AppState state, dynamic action) {
 // can be used for Action and State.
 AppState clickCounterReducer(AppState state, dynamic action) {
   if (action == AppAction.increment) {
-    return new AppState(state.count, state.clickCount + 1);
+    return AppState(state.count, state.clickCount + 1);
   }
   if (action == AppAction.decrement) {
-    return new AppState(state.count, state.clickCount + 1);
+    return AppState(state.count, state.clickCount + 1);
   }
 
   return state;
@@ -56,9 +56,9 @@ void main() {
     counterReducer,
     clickCounterReducer,
   ]);
-  final store = new Store<AppState>(
+  final store = Store<AppState>(
     combined,
-    initialState: new AppState(0, 0),
+    initialState: AppState(0, 0),
   );
 
   render(store.state);
@@ -79,7 +79,7 @@ void main() {
   });
 
   querySelector('#incrementAsync').onClick.listen((_) {
-    new Future<Null>.delayed(new Duration(milliseconds: 1000)).then((_) {
+    Future<Null>.delayed(Duration(milliseconds: 1000)).then((_) {
       store.dispatch(AppAction.increment);
     });
   });
