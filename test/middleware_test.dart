@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 
@@ -74,6 +75,29 @@ void main() {
       expect(order[3], equals('second'));
 
       expect(middleware1.counter, equals(2));
+    });
+
+    test('dispatch returns the value from middleware', () async {
+      final passthrough = PassThroughMiddleware<String>();
+      final thunk = ThunkMiddleware<String>();
+      Future<void> thunkAction(Store<String> store) async {
+        await Future<void>.delayed(Duration(milliseconds: 5));
+        store.dispatch("changed");
+      }
+
+      final store = Store<String>(
+        stringReducer,
+        initialState: 'hello',
+        middleware: [passthrough, thunk],
+      );
+
+      final awaitableAction = store.dispatch(thunkAction) as Future<void>;
+
+      // Did not change yet
+      expect(store.state, equals('hello'));
+      await awaitableAction;
+      // The effect has taken place
+      expect(store.state, equals('changed'));
     });
   });
 }

@@ -28,8 +28,7 @@ class StringReducer extends ReducerClass<String> {
 
 class IncrementMiddleware extends MiddlewareClass<String> {
   int counter = 0;
-  final _invocationsController =
-      StreamController<String>.broadcast(sync: true);
+  final _invocationsController = StreamController<String>.broadcast(sync: true);
 
   Stream<String> get invocations => _invocationsController.stream;
 
@@ -68,6 +67,24 @@ class ExtraActionIfDispatchedIncrementMiddleware extends IncrementMiddleware {
     if (!hasDispatched) {
       hasDispatched = true;
       store.dispatch('another action');
+    }
+  }
+}
+
+class PassThroughMiddleware<State> implements MiddlewareClass<State> {
+  @override
+  dynamic call(Store<State> store, dynamic action, NextDispatcher next) {
+    return next(action);
+  }
+}
+
+class ThunkMiddleware<State> implements MiddlewareClass<State> {
+  @override
+  dynamic call(Store<State> store, dynamic action, NextDispatcher next) {
+    if (action is Function) {
+      return action(store);
+    } else {
+      return next(action);
     }
   }
 }
