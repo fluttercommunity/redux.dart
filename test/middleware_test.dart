@@ -79,14 +79,14 @@ void main() {
     });
 
     test('dispatch returns the value from middleware', () async {
-      final middleware1 = new PassThroughMiddleware();
-      final middleware2 = new ThunkMiddleware();
+      final middleware1 = PassThroughMiddleware();
+      final middleware2 = ThunkMiddleware();
       final ThunkAction<String> thunkAction = (store) async {
         await sleep(Duration(milliseconds: 300));
         store.dispatch("changed");
       };
 
-      final store = new Store<String>(
+      final store = Store<String>(
           stringReducer,
           initialState: 'hello',
           middleware: [middleware1, middleware2]
