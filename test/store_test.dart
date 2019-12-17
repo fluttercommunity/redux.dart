@@ -64,5 +64,18 @@ void main() {
 
       expect(states, <String>[action]);
     });
+
+    test('State is null after teardown & change contoller closed', () async {
+      final action = 'test';
+      final store = Store<String>(
+        stringReducer,
+        initialState: 'hello',
+        syncStream: true,
+        distinct: true,
+      );
+      await store.teardown();
+      expect(store.state, isNull);
+      expect(() => store.dispatch(action), throwsStateError);
+    });
   });
 }
