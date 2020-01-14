@@ -19,7 +19,7 @@ import 'dart:async';
 ///     }
 ///
 ///     final store = new Store<int>(counterReducer);
-typedef State Reducer<State>(State state, dynamic action);
+typedef Reducer<State> = State Function(State state, dynamic action);
 
 /// Defines a [Reducer] using a class interface.
 ///
@@ -70,7 +70,7 @@ abstract class ReducerClass<State> {
 ///       counterReducer,
 ///       middleware: [loggingMiddleware],
 ///     );
-typedef dynamic Middleware<State>(
+typedef Middleware<State> = dynamic Function(
   Store<State> store,
   dynamic action,
   NextDispatcher next,
@@ -111,7 +111,7 @@ abstract class MiddlewareClass<State> {
 /// Middleware can optionally pass the original action or a modified action to
 /// the next piece of middleware, or never call the next piece of middleware at
 /// all.
-typedef dynamic NextDispatcher(dynamic action);
+typedef NextDispatcher = dynamic Function(dynamic action);
 
 /// Creates a Redux store that holds the app state tree.
 ///
