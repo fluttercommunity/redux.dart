@@ -82,7 +82,7 @@ void main() {
       final thunk = ThunkMiddleware<String>();
       Future<void> thunkAction(Store<String> store) async {
         await Future<void>.delayed(Duration(milliseconds: 5));
-        store.dispatch("changed");
+        store.dispatch('changed');
       }
 
       final store = Store<String>(
