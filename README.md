@@ -3,7 +3,7 @@
 [![Flutter Community: redux](https://fluttercommunity.dev/_github/header/redux)](https://github.com/fluttercommunity/community)
 
 
-[Redux](http://redux.js.org/) for Dart using generics for typed State. It includes a rich ecosystem of [Docs](#docs), [Middleware](#middleware), [Dev Tools](#dev-tools) and can be combined with Flutter using the [flutter_redux](https://pub.dartlang.org/packages/flutter_redux) package.
+[Redux](https://redux.js.org/) for Dart using generics for typed State. It includes a rich ecosystem of [Docs](#docs), [Middleware](#middleware), [Dev Tools](#dev-tools) and can be combined with Flutter using the [flutter_redux](https://pub.dartlang.org/packages/flutter_redux) package.
 
 ## Docs
 
