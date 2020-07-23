@@ -1,3 +1,7 @@
+# 4.0.0+2
+
+  * Update README with fluttercommunity links
+
 # 4.0.0+1
 
   * Moved package to Flutter Community

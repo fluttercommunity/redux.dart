@@ -6,7 +6,7 @@ authors:
 - Brian Egan <brian@brianegan.com>
 description: Redux is a predictable state container for Dart and Flutter apps
 homepage: https://github.com/johnpryan/redux.dart
-version: 4.0.0+1
+version: 4.0.0+2
 
 environment:
   sdk: '>=2.0.0 <3.0.0'
