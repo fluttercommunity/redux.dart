@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/johnpryan/redux.dart.svg?branch=master)](https://travis-ci.org/fluttercommunity/redux.dart)
+[![Build Status](https://api.travis-ci.org/fluttercommunity/redux.dart.svg?branch=master)](https://travis-ci.org/fluttercommunity/redux.dart)
 [![codecov](https://codecov.io/gh/fluttercommunity/redux.dart/branch/master/graph/badge.svg)](https://codecov.io/gh/fluttercommunity/redux.dart)
 [![Flutter Community: redux](https://fluttercommunity.dev/_github/header/redux)](https://github.com/fluttercommunity/community)
 
