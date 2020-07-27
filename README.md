@@ -41,7 +41,7 @@ See the `example/` directory for a few simple examples of the basics of Redux.
 To launch the examples in your browser:
 
   1. Run `pub serve example` from this directory
-  2. Open [http://localhost:8080](http://localhost:8080)
+  2. Open `http://localhost:8080`
 
 ## Middleware
 
