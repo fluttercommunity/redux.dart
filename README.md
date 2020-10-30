@@ -3,7 +3,7 @@
 [![Flutter Community: redux](https://fluttercommunity.dev/_github/header/redux)](https://github.com/fluttercommunity/community)
 
 
-[Redux](https://redux.js.org/) for Dart using generics for typed State. It includes a rich ecosystem of [Docs](#docs), [Middleware](#middleware), [Dev Tools](#dev-tools) and can be combined with Flutter using the [flutter_redux](https://pub.dartlang.org/packages/flutter_redux) package.
+[Redux](https://redux.js.org/) for Dart using generics for typed State. It includes a rich ecosystem of [Docs](#docs), [Middleware](#middleware), [Dev Tools](#dev-tools) and can be combined with Flutter using the [flutter_redux](https://pub.dev/packages/flutter_redux) package.
 
 ## Docs
 
@@ -16,7 +16,7 @@
 
 ## Flutter Examples
 
-To integrate Redux.dart with Flutter, please use the [flutter_redux](https://pub.dartlang.org/packages/flutter_redux) package. 
+To integrate Redux.dart with Flutter, please use the [flutter_redux](https://pub.dev/packages/flutter_redux) package. 
 
 ### Beginner
 
@@ -45,26 +45,26 @@ To launch the examples in your browser:
 
 ## Middleware
 
-  * [redux_logging](https://pub.dartlang.org/packages/redux_logging) - Connects a [Logger](https://pub.dartlang.org/packages/logging) to a Store, and can print out actions as they're dispatched to your console.
-  * [redux_thunk](https://pub.dartlang.org/packages/redux_thunk) - Allows you to dispatch functions that perform async work as actions.
-  * [redux_future](https://pub.dartlang.org/packages/redux_future) - For handling Dart Futures that are dispatched as Actions.
-  * [redux_epics](https://pub.dartlang.org/packages/redux_epics) - Middleware that allows you to work with Dart Streams of Actions to perform async work.
+  * [redux_logging](https://pub.dev/packages/redux_logging) - Connects a [Logger](https://pub.dev/packages/logging) to a Store, and can print out actions as they're dispatched to your console.
+  * [redux_thunk](https://pub.dev/packages/redux_thunk) - Allows you to dispatch functions that perform async work as actions.
+  * [redux_future](https://pub.dev/packages/redux_future) - For handling Dart Futures that are dispatched as Actions.
+  * [redux_epics](https://pub.dev/packages/redux_epics) - Middleware that allows you to work with Dart Streams of Actions to perform async work.
 
 ## Dev Tools
 
-The [redux_dev_tools](https://pub.dartlang.org/packages/redux_dev_tools) library allows you to create a `DevToolsStore` during dev mode in place of a normal Redux `Store`. 
+The [redux_dev_tools](https://pub.dev/packages/redux_dev_tools) library allows you to create a `DevToolsStore` during dev mode in place of a normal Redux `Store`. 
 
 This `DevToolsStore` will act exactly like a normal `Store` at first. However, it will also allow you to travel back and forth throughout the States of your app or recompute the State of your app by replaying all actions through your reducers. This works perfectly with Hot Reloading!
 
 You can combine the `DevToolsStore` with your own UI to travel in time, or use one of the existing options for the platform you're working with:
 
-  * *Flutter* - [flutter_redux_dev_tools](https://pub.dartlang.org/packages/flutter_redux_dev_tools)
-  * *Web* - [angular_redux_dev_tools](https://pub.dartlang.org/packages/angular_redux_dev_tools)
-  * *Remote* - [Redux Remote Devtools](https://pub.dartlang.org/packages/angular_redux_dev_tools). Connect your Redux.dart store to [Remote DevTools](http://extension.remotedev.io/) and debug in a web browser
+  * *Flutter* - [flutter_redux_dev_tools](https://pub.dev/packages/flutter_redux_dev_tools)
+  * *Web* - [angular_redux_dev_tools](https://pub.dev/packages/angular_redux_dev_tools)
+  * *Remote* - [Redux Remote Devtools](https://pub.dev/packages/angular_redux_dev_tools). Connect your Redux.dart store to [Remote DevTools](http://extension.remotedev.io/) and debug in a web browser
   
 ## Additional Utilities
 
-  * [reselect](https://pub.dartlang.org/packages/reselect) - Efficiently derive data from your Redux Store with memoized functions.
+  * [reselect](https://pub.dev/packages/reselect) - Efficiently derive data from your Redux Store with memoized functions.
   * [redux_persist](https://github.com/Cretezy/redux_persist) - Persist Redux State, works for Web and Flutter
 
 ## Usage
