@@ -115,6 +115,25 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
   }
 }
 
+/// A convenience class for wrapping Reducers in context where classes required.
+///
+/// This allows usage when we need to combine function and class reducers
+/// in single const context.
+///
+/// See also:
+///
+///  * [CombinedReducer] - to combine reducers in const context.
+class UntypedReducer<State> implements ReducerClass<State> {
+  /// A [Reducer] function
+  final State Function(State state, dynamic action) reducer;
+
+  /// Wraps reducer function in class
+  const UntypedReducer(this.reducer);
+
+  @override
+  State call(State state, dynamic action) => reducer(state, action);
+}
+
 /// A convenience type for binding a piece of Middleware to an Action
 /// of a specific type. Allows for Type Safe Middleware and reduces boilerplate.
 ///
