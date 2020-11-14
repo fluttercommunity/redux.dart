@@ -108,7 +108,7 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
 
   /// Creates a reducer that will only be executed if the dispatched action
   /// matches the [Action] type.
-  TypedReducer(this.reducer);
+  const TypedReducer(this.reducer);
 
   @override
   State call(State state, dynamic action) {
