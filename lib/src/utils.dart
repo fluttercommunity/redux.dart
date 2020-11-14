@@ -97,6 +97,11 @@ import 'package:redux/src/store.dart';
 ///   new TypedReducer<AppState, ReverseItemAction>(reverseItemsReducer),
 /// ]);
 /// ```
+///
+/// See also:
+///
+///  * [UntypedReducer] as shorthand for `TypedReducer<State, dynamic>`
+///    in contexts where classes are required
 class TypedReducer<State, Action> implements ReducerClass<State> {
   /// A [Reducer] function that only accepts an action of a specific type
   final State Function(State state, Action action) reducer;
