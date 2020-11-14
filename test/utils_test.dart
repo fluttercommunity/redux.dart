@@ -3,17 +3,17 @@ import 'package:test/test.dart';
 
 import 'test_data.dart';
 
+String testAction1Reducer(String state, TestAction1 action) =>
+    action.toString();
+
+String testAction2Reducer(String state, TestAction2 action) =>
+    action.toString();
+
 void main() {
-  String testAction1Reducer(String state, TestAction1 action) =>
-      action.toString();
-
-  String testAction2Reducer(String state, TestAction2 action) =>
-      action.toString();
-
   group('Typed Reducers', () {
     test('can be used standalone', () {
       final store = Store<String>(
-        TypedReducer<String, TestAction1>(testAction1Reducer),
+        const TypedReducer<String, TestAction1>(testAction1Reducer),
         initialState: 'hello',
       );
 
@@ -24,7 +24,7 @@ void main() {
     test('are not invoked if they do not handle the action type', () {
       final initialState = 'hello';
       final store = Store<String>(
-        TypedReducer<String, TestAction1>(testAction1Reducer),
+        const TypedReducer<String, TestAction1>(testAction1Reducer),
         initialState: initialState,
       );
 
@@ -71,6 +71,55 @@ void main() {
       final store = Store<String>(
         combineReducers([
           reducer1,
+          TypedReducer<String, TestAction2>(testAction2Reducer),
+        ]),
+        initialState: 'hello',
+      );
+
+      store.dispatch('helloReducer1');
+      expect(store.state, equals('reducer 1 reporting'));
+
+      store.dispatch(TestAction2());
+      expect(store.state, contains('TestAction2'));
+    });
+  });
+
+  group('CombinedReducer', () {
+    test('should invoke each reducer', () {
+      const combinedReducer = CombinedReducer([
+        UntypedReducer(reducer1),
+        UntypedReducer(reducer2),
+      ]);
+
+      final store = Store(combinedReducer, initialState: 'hello');
+      expect(store.state, equals('hello'));
+      store.dispatch('helloReducer1');
+      expect(store.state, equals('reducer 1 reporting'));
+      store.dispatch('helloReducer2');
+      expect(store.state, equals('reducer 2 reporting'));
+    });
+
+    test('works with TypedReducers', () {
+      const combinedReducer = CombinedReducer<String>([
+        TypedReducer<String, TestAction1>(testAction1Reducer),
+        TypedReducer<String, TestAction2>(testAction2Reducer),
+      ]);
+      final store = Store<String>(
+        combinedReducer,
+        initialState: 'hello',
+      );
+
+      store.dispatch(TestAction1());
+      expect(store.state, contains('TestAction1'));
+
+      store.dispatch(TestAction2());
+      expect(store.state, contains('TestAction2'));
+    });
+
+    test('can combine typed with non-typed reducers', () {
+      final store = Store<String>(
+        const CombinedReducer([
+          UntypedReducer(reducer1),
           TypedReducer<String, TestAction2>(testAction2Reducer),
         ]),
         initialState: 'hello',

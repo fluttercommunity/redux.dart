@@ -198,6 +198,32 @@ AppState appStateReducer(AppState state, action) => new AppState(
 );
 ```
 
+The other way is to use `CombinedReducer` class.
+Then we can build our entire reducers tree as const object.
+
+```dart
+const itemsReducer = CombineReducer<List<String>>([
+  TypedReducer<List<String>, AddItemAction>(addItemReducer),
+  TypedReducer<List<String>, RemoveItemAction>(removeItemReducer),
+  UntypedReducer(someReducerWithDynamicAction),
+]);
+```
+
+But there is a drawback: all reducers in list must implement `ReducerClass`.
+This is caused by the fact that we can't assign [Callable Classes](https://dart.dev/guides/language/language-tour#callable-classes) to const Function:
+See also `UntypedReducer` as class wrapper for reducers with dynamic action.
+```dart
+/// introduce compile-time error
+/// A value of type 'TypedReducer<String, String>' can't be assigned to a const variable of type 'String Function(String, dynamic)'.
+const Reducer<String> reducer = TypedReducer<String, String>(null);
+
+/// Works, but we can't use reducer as const value anymore.
+final Reducer<String> reducer = const TypedReducer<String, String>(null);
+
+/// works as expected
+const ReducerClass<String> reducer = TypedReducer<String, String>(null);
+```  
+
 ### Summary, aka "all the way down the rabbit hole"
 
 We saw how to:

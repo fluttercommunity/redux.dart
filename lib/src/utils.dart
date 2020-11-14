@@ -97,13 +97,18 @@ import 'package:redux/src/store.dart';
 ///   new TypedReducer<AppState, ReverseItemAction>(reverseItemsReducer),
 /// ]);
 /// ```
+///
+/// See also:
+///
+///  * [UntypedReducer] as shorthand for `TypedReducer<State, dynamic>`
+///    in contexts where classes are required
 class TypedReducer<State, Action> implements ReducerClass<State> {
   /// A [Reducer] function that only accepts an action of a specific type
   final State Function(State state, Action action) reducer;
 
   /// Creates a reducer that will only be executed if the dispatched action
   /// matches the [Action] type.
-  TypedReducer(this.reducer);
+  const TypedReducer(this.reducer);
 
   @override
   State call(State state, dynamic action) {
@@ -113,6 +118,25 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
 
     return state;
   }
+}
+
+/// A convenience class for wrapping Reducers in context where classes required.
+///
+/// This allows usage when we need to combine function and class reducers
+/// in single const context.
+///
+/// See also:
+///
+///  * [CombinedReducer] - to combine reducers in const context.
+class UntypedReducer<State> implements ReducerClass<State> {
+  /// A [Reducer] function
+  final State Function(State state, dynamic action) reducer;
+
+  /// Wraps reducer function in class
+  const UntypedReducer(this.reducer);
+
+  @override
+  State call(State state, dynamic action) => reducer(state, action);
 }
 
 /// A convenience type for binding a piece of Middleware to an Action
@@ -260,4 +284,49 @@ Reducer<State> combineReducers<State>(Iterable<Reducer<State>> reducers) {
     }
     return state;
   };
+}
+
+/// Defines a utility class that combines several reducers.
+/// Works the same way as [combineReducers],
+/// but accept ReducerClass implementations.
+///
+///
+///
+/// In order to prevent having one large, monolithic reducer in your app, it can
+/// be convenient to break reducers up into smaller parts that handle more
+/// specific functionality that can be decoupled and easily tested.
+///
+/// ### Example
+///
+/// ```dart
+///     helloReducer(state, action) {
+///         return "hello";
+///     }
+///
+///     friendReducer(state, action) {
+///       return state + " friend";
+///     }
+///
+///     /// we can create const reducer if helloReducer and friendReducer
+///     /// are static or top-level functions
+///     const helloFriendReducer = CombineReducers(
+///       UntypedReducer(helloReducer),
+///       UntypedReducer(friendReducer),
+///     );
+/// ```
+class CombinedReducer<State> implements ReducerClass<State> {
+  /// A [Reducer] functions to be executed
+  final Iterable<ReducerClass<State>> reducers;
+
+  /// Creates a reducer that will try to execute supplied reducers.
+  const CombinedReducer(this.reducers);
+
+  @override
+  State call(State state, dynamic action) {
+    for (final reducer in reducers) {
+      state = reducer(state, action);
+    }
+
+    return state;
+  }
 }
