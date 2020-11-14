@@ -52,9 +52,9 @@ AppState clickCounterReducer(AppState state, dynamic action) {
 
 void main() {
   // Create a new reducer and store for the app.
-  final combined = combineReducers<AppState>([
-    counterReducer,
-    clickCounterReducer,
+  const combined = CombinedReducer<AppState>([
+    UntypedReducer(counterReducer),
+    UntypedReducer(clickCounterReducer),
   ]);
   final store = Store<AppState>(
     combined,
