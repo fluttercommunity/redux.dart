@@ -261,3 +261,48 @@ Reducer<State> combineReducers<State>(Iterable<Reducer<State>> reducers) {
     return state;
   };
 }
+
+/// Defines a utility class that combines several reducers.
+/// Works the same way as [combineReducers],
+/// but accept ReducerClass implementations.
+///
+///
+///
+/// In order to prevent having one large, monolithic reducer in your app, it can
+/// be convenient to break reducers up into smaller parts that handle more
+/// specific functionality that can be decoupled and easily tested.
+///
+/// ### Example
+///
+/// ```dart
+///     helloReducer(state, action) {
+///         return "hello";
+///     }
+///
+///     friendReducer(state, action) {
+///       return state + " friend";
+///     }
+///
+///     /// we can create const reducer if helloReducer and friendReducer
+///     /// are static or top-level functions
+///     const helloFriendReducer = CombineReducers(
+///       UntypedReducer(helloReducer),
+///       UntypedReducer(friendReducer),
+///     );
+/// ```
+class CombinedReducer<State> implements ReducerClass<State> {
+  /// A [Reducer] functions to be executed
+  final Iterable<ReducerClass<State>> reducers;
+
+  /// Creates a reducer that will try to execute supplied reducers.
+  const CombinedReducer(this.reducers);
+
+  @override
+  State call(State state, dynamic action) {
+    for (final reducer in reducers) {
+      state = reducer(state, action);
+    }
+
+    return state;
+  }
+}
