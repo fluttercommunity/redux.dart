@@ -2,10 +2,10 @@ name: redux
 maintainer: John Ryan (@johnpryan)
 description: Redux is a predictable state container for Dart and Flutter apps
 homepage: https://github.com/fluttercommunity/redux.dart
-version: 4.1.0-nullsafety.0
+version: 5.0.0-nullsafety.0
 
 environment:
-  sdk: '>=2.12.0-29.10.beta <3.0.0'
+  sdk: '>=2.12.0-133.2.beta <3.0.0'
 
 dev_dependencies:
   test: ^1.16.0-nullsafety.12

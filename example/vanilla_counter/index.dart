@@ -4,7 +4,7 @@ import 'dart:html';
 import 'package:redux/redux.dart';
 
 void render(int state) {
-  querySelector('#value').innerHtml = '$state';
+  querySelector('#value')!.innerHtml = '$state';
 }
 
 enum Actions { increment, decrement }
@@ -35,21 +35,21 @@ void main() {
   render(store.state);
   store.onChange.listen(render);
 
-  querySelector('#increment').onClick.listen((_) {
+  querySelector('#increment')!.onClick.listen((_) {
     store.dispatch(Actions.increment);
   });
 
-  querySelector('#decrement').onClick.listen((_) {
+  querySelector('#decrement')!.onClick.listen((_) {
     store.dispatch(Actions.decrement);
   });
 
-  querySelector('#incrementIfOdd').onClick.listen((_) {
+  querySelector('#incrementIfOdd')!.onClick.listen((_) {
     if (store.state % 2 != 0) {
       store.dispatch(Actions.increment);
     }
   });
 
-  querySelector('#incrementAsync').onClick.listen((_) {
+  querySelector('#incrementAsync')!.onClick.listen((_) {
     Future<Null>.delayed(Duration(milliseconds: 1000)).then((_) {
       store.dispatch(Actions.increment);
     });

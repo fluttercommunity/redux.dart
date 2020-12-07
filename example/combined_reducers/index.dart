@@ -4,8 +4,8 @@ import 'dart:html';
 import 'package:redux/redux.dart';
 
 void render(AppState state) {
-  querySelector('#value').innerHtml = '${state.count}';
-  querySelector('#clickValue').innerHtml = '${state.clickCount}';
+  querySelector('#value')!.innerHtml = '${state.count}';
+  querySelector('#clickValue')!.innerHtml = '${state.clickCount}';
 }
 
 class AppState {
@@ -64,21 +64,21 @@ void main() {
   render(store.state);
   store.onChange.listen(render);
 
-  querySelector('#increment').onClick.listen((_) {
+  querySelector('#increment')!.onClick.listen((_) {
     store.dispatch(AppAction.increment);
   });
 
-  querySelector('#decrement').onClick.listen((_) {
+  querySelector('#decrement')!.onClick.listen((_) {
     store.dispatch(AppAction.decrement);
   });
 
-  querySelector('#incrementIfOdd').onClick.listen((_) {
+  querySelector('#incrementIfOdd')!.onClick.listen((_) {
     if (store.state.count % 2 != 0) {
       store.dispatch(AppAction.increment);
     }
   });
 
-  querySelector('#incrementAsync').onClick.listen((_) {
+  querySelector('#incrementAsync')!.onClick.listen((_) {
     Future<Null>.delayed(Duration(milliseconds: 1000)).then((_) {
       store.dispatch(AppAction.increment);
     });

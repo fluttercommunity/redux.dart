@@ -159,8 +159,8 @@ class Store<State> {
   Reducer<State> reducer;
 
   final StreamController<State> _changeController;
-  State _state;
-  List<NextDispatcher> _dispatchers;
+  State? _state;
+  late List<NextDispatcher> _dispatchers;
 
   /// Creates an instance of a Redux Store.
   ///
@@ -179,7 +179,7 @@ class Store<State> {
   /// By default, the Stream is async.
   Store(
     this.reducer, {
-    State initialState,
+    State? initialState,
     List<Middleware<State>> middleware = const [],
     bool syncStream = false,
 
@@ -190,8 +190,8 @@ class Store<State> {
     /// Under the hood, it will use the `==` method from your State class to
     /// determine whether or not the two States are equal.
     bool distinct = false,
-  }) : _changeController = StreamController.broadcast(sync: syncStream) {
-    _state = initialState;
+  })  : _state = initialState,
+        _changeController = StreamController.broadcast(sync: syncStream) {
     _dispatchers = _createDispatchers(
       middleware,
       _createReduceAndNotify(distinct),
@@ -199,7 +199,12 @@ class Store<State> {
   }
 
   /// Returns the current state of the app
-  State get state => _state;
+  State get state {
+    if (_state == null) {
+      throw ClosedStoreError();
+    }
+    return _state!;
+  }
 
   /// A stream that emits the current state when it changes.
   ///
@@ -232,7 +237,11 @@ class Store<State> {
   // the reducer, save the result, and notify any subscribers.
   NextDispatcher _createReduceAndNotify(bool distinct) {
     return (dynamic action) {
-      final state = reducer(_state, action);
+      if (_state == null) {
+        return;
+      }
+
+      final state = reducer(_state!, action);
 
       if (distinct && state == _state) return;
 
@@ -276,3 +285,8 @@ class Store<State> {
     return _changeController.close();
   }
 }
+
+/// Thrown if Store is closed.
+/// Store throws this exception on `Store.state` access after `Store.teardown()` method
+/// has beed invoked. Previously `Store.state` would return `nul` in that case.
+class ClosedStoreError implements Exception {}
