@@ -159,8 +159,8 @@ class Store<State> {
   Reducer<State> reducer;
 
   final StreamController<State> _changeController;
-  State _state;
-  List<NextDispatcher> _dispatchers;
+  late State _state;
+  late final List<NextDispatcher> _dispatchers;
 
   /// Creates an instance of a Redux Store.
   ///
@@ -179,7 +179,7 @@ class Store<State> {
   /// By default, the Stream is async.
   Store(
     this.reducer, {
-    State initialState,
+    required State initialState,
     List<Middleware<State>> middleware = const [],
     bool syncStream = false,
 
@@ -272,7 +272,6 @@ class Store<State> {
   /// this method as a way to stop listening to [onChange] state changes. For
   /// that purpose, view the [onChange] documentation.
   Future teardown() async {
-    _state = null;
     return _changeController.close();
   }
 }
