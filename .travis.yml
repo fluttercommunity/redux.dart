@@ -1,7 +1,8 @@
 language: dart
 sudo: false
 dart:
-- stable
+# This branch doesn't support stable yet:
+#- stable
 - dev
 with_content_shell: false
 script:
