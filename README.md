@@ -34,15 +34,6 @@ To integrate Redux.dart with Flutter, please use the [flutter_redux](https://pub
        * [Reduxing Flutter Firebase App](https://marcinszalek.pl/flutter/reduxing-flutter/) - Article describing how the author combined Redux with Firebase.
        * [Deleting entry and undoing deletion in snackbar](https://marcinszalek.pl/flutter/deleting-entry-with-undo/) - Article showing how to create "Undo" actions with Redux & Firebase. 
 
-## Web Examples
-
-See the `example/` directory for a few simple examples of the basics of Redux.
-
-To launch the examples in your browser:
-
-  1. Run `pub serve example` from this directory
-  2. Open `http://localhost:8080`
-
 ## Middleware
 
   * [redux_logging](https://pub.dartlang.org/packages/redux_logging) - Connects a [Logger](https://pub.dartlang.org/packages/logging) to a Store, and can print out actions as they're dispatched to your console.
