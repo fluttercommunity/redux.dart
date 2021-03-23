@@ -245,7 +245,7 @@ class Store<State> {
     List<Middleware<State>> middleware,
     NextDispatcher reduceAndNotify,
   ) {
-    final dispatchers = <NextDispatcher>[]..add(reduceAndNotify);
+    final dispatchers = <NextDispatcher>[reduceAndNotify];
 
     // Convert each [Middleware] into a [NextDispatcher]
     for (var nextMiddleware in middleware.reversed) {
