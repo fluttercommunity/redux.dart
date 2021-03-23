@@ -29,19 +29,10 @@ To integrate Redux.dart with Flutter, please use the [flutter_redux](https://pub
 ### Advanced
 
   * [inKino App](https://github.com/roughike/inKino) - A cross platform movie and showtime browser for Finnkino cinemas built with Redux. Lots of testing included as well! 
-  * [flutter_architecture_samples](https://gitlab.com/brianegan/flutter_architecture_samples/tree/master/example/redux) - A Todo List App with local storage and multiple screens. Includes a README describing how to combine Redux with Flutter effectively.
+  * [flutter_architecture_samples](https://github.com/brianegan/flutter_architecture_samples/tree/master/redux) - A Todo List App with local storage and multiple screens. Includes a README describing how to combine Redux with Flutter effectively.
   * [Weight Tracking App](https://github.com/MSzalek-Mobile/weight_tracker/) - Demonstrates how to combine Redux with Firebase to build a Flutter app by [MarcinusX](https://github.com/MarcinusX).
        * [Reduxing Flutter Firebase App](https://marcinszalek.pl/flutter/reduxing-flutter/) - Article describing how the author combined Redux with Firebase.
        * [Deleting entry and undoing deletion in snackbar](https://marcinszalek.pl/flutter/deleting-entry-with-undo/) - Article showing how to create "Undo" actions with Redux & Firebase. 
-
-## Web Examples
-
-See the `example/` directory for a few simple examples of the basics of Redux.
-
-To launch the examples in your browser:
-
-  1. Run `pub serve example` from this directory
-  2. Open `http://localhost:8080`
 
 ## Middleware
 
@@ -59,7 +50,6 @@ This `DevToolsStore` will act exactly like a normal `Store` at first. However, i
 You can combine the `DevToolsStore` with your own UI to travel in time, or use one of the existing options for the platform you're working with:
 
   * *Flutter* - [flutter_redux_dev_tools](https://pub.dev/packages/flutter_redux_dev_tools)
-  * *Web* - [angular_redux_dev_tools](https://pub.dev/packages/angular_redux_dev_tools)
   * *Remote* - [Redux Remote Devtools](https://pub.dev/packages/angular_redux_dev_tools). Connect your Redux.dart store to [Remote DevTools](http://extension.remotedev.io/) and debug in a web browser
   
 ## Additional Utilities

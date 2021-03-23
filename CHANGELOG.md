@@ -1,3 +1,14 @@
+5.0.0
+
+  * Preview version, same as 5.0.0-nullsafety
+
+5.0.0-nullsafety
+
+  * Update to null safety
+  * Drop package:coverage
+  * Remove web examples.  They depend on build_runner which has not been
+    upgraded to null safety yet.
+
 # 4.0.0+3
 
   * Update README

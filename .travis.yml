@@ -1,16 +1,17 @@
 language: dart
 sudo: false
 dart:
-- stable
+# This branch doesn't support stable yet:
+#- stable
 - dev
 with_content_shell: false
 script:
   - dartanalyzer --fatal-infos --fatal-warnings ./
   - dartfmt -n ./lib --set-exit-if-changed
-  - pub global activate coverage
+#  - pub global activate coverage
   - pub run test test/redux_test.dart
   - dart --disable-service-auth-codes --enable-vm-service=8111 --pause-isolates-on-exit test/redux_test.dart &
-  - nohup pub global run coverage:collect_coverage --port=8111 --out=coverage.json --wait-paused --resume-isolates
-  - pub global run coverage:format_coverage --lcov --in=coverage.json --out=lcov.info --packages=.packages --report-on=lib
+#  - nohup pub global run coverage:collect_coverage --port=8111 --out=coverage.json --wait-paused --resume-isolates
+#  - pub global run coverage:format_coverage --lcov --in=coverage.json --out=lcov.info --packages=.packages --report-on=lib
 after_success:
   - bash <(curl -s https://codecov.io/bash)
