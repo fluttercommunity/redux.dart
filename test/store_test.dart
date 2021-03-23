@@ -17,7 +17,7 @@ void main() {
       var subscriber2Called = false;
       final store = Store<String>(
         stringReducer,
-        initialState: 'hello',
+        initialState: 'I',
         syncStream: true,
       );
       final subscription = store.onChange.listen((String state) {
@@ -39,7 +39,7 @@ void main() {
       final states = <String>[];
       final store = Store<String>(
         stringReducer,
-        initialState: 'hello',
+        initialState: 'I',
         syncStream: true,
       );
       store.onChange.listen((state) => states.add(state));
@@ -55,7 +55,7 @@ void main() {
       final action = 'test';
       final states = <String>[];
       final store = Store<String>(stringReducer,
-          initialState: 'hello', syncStream: true, distinct: true);
+          initialState: 'I', syncStream: true, distinct: true);
       store.onChange.listen((state) => states.add(state));
 
       // Dispatch two actions. Only one should be emitted b/c distinct is true
@@ -69,12 +69,12 @@ void main() {
       final action = 'test';
       final store = Store<String>(
         stringReducer,
-        initialState: 'hello',
+        initialState: 'I',
         syncStream: true,
         distinct: true,
       );
       await store.teardown();
-      expect(store.state, isNull);
+      expect(store.state, 'I');
       expect(() => store.dispatch(action), throwsStateError);
     });
   });
