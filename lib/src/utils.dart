@@ -213,7 +213,7 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
 /// ```
 class TypedMiddleware<State, Action> implements MiddlewareClass<State> {
   /// A [Middleware] function that only works on actions of a specific type.
-  final void Function(
+  final dynamic Function(
     Store<State> store,
     Action action,
     NextDispatcher next,
