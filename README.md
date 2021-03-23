@@ -51,7 +51,7 @@ You can combine the `DevToolsStore` with your own UI to travel in time, or use o
 
   * *Flutter* - [flutter_redux_dev_tools](https://pub.dartlang.org/packages/flutter_redux_dev_tools)
   * *Web* - [angular_redux_dev_tools](https://pub.dartlang.org/packages/angular_redux_dev_tools)
-  * *Remote* - [Redux Remote Devtools](https://pub.dartlang.org/packages/angular_redux_dev_tools). Connect your Redux.dart store to [Remote DevTools](http://extension.remotedev.io/) and debug in a web browser
+  * *Remote* - [Redux Remote Devtools](https://pub.dartlang.org/packages/angular_redux_dev_tools). Connect your Redux.dart store to [Remote DevTools](https://extension.remotedev.io/) and debug in a web browser
   
 ## Additional Utilities
 
