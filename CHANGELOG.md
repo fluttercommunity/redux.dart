@@ -1,8 +1,8 @@
-5.0.0
+# 5.0.0
 
   * Preview version, same as 5.0.0-nullsafety
 
-5.0.0-nullsafety
+# 5.0.0-nullsafety
 
   * Update to null safety
   * Drop package:coverage
