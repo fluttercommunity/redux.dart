@@ -89,8 +89,18 @@ class ThunkMiddleware<State> implements MiddlewareClass<State> {
   }
 }
 
+class TypedTestMiddleware extends TypedMiddlewareBase<String, TypedTestAction> {
+  @override
+  dynamic dispatch(
+      Store<String> store, TypedTestAction action, NextDispatcher next) {
+    next('TypedTestMiddleware called');
+  }
+}
+
 class TestAction1 {}
 
 class TestAction2 {}
 
 class TestAction3 {}
+
+class TypedTestAction {}

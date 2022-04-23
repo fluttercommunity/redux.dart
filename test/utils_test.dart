@@ -108,6 +108,7 @@ void main() {
         middleware: [
           TypedMiddleware<String, TestAction1>(testAction1Middleware),
           TypedMiddleware<String, TestAction2>(testAction2Middleware),
+          TypedTestMiddleware(),
         ],
       );
 
@@ -116,6 +117,9 @@ void main() {
 
       store.dispatch(TestAction2());
       expect(store.state, 'testAction2Middleware called');
+
+      store.dispatch(TypedTestAction());
+      expect(store.state, 'TypedTestMiddleware called');
     });
 
     test(
@@ -127,6 +131,7 @@ void main() {
         initialState: initialState,
         middleware: [
           TypedMiddleware<String, TestAction1>(testAction1Middleware),
+          TypedTestMiddleware(),
         ],
       );
 

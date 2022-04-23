@@ -100,12 +100,22 @@ loggingMiddleware(Store<int> store, action, NextDispatcher next) {
   next(action);
 }
 
+// You can also create a middleware class bound to exact action type.
+class CallMiddleware extends TypedMiddlewareBase<State, CallAction> {
+  @override
+  dynamic dispatch(
+      Store<String> store, CallAction action, NextDispatcher next) {
+    service.call(action.phone);
+    next(action);
+  }
+}
+
 main() {
   // Create the store with our Reducer and Middleware
   final store = new Store<int>(
     counterReducer, 
     initialState: 0, 
-    middleware: [loggingMiddleware],
+    middleware: [loggingMiddleware, CallMiddleware()],
   );
 
   // Render our State right away
