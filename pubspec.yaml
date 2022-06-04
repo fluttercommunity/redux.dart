@@ -4,7 +4,7 @@ description: Redux is a predictable state container for Dart and Flutter apps
 homepage: https://github.com/fluttercommunity/redux.dart
 version: 5.0.0
 
-environment:
+environment: 
   sdk: '>=2.12.0-0 <3.0.0'
 
 dev_dependencies:
