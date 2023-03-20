@@ -1,8 +1,12 @@
-5.0.0
+# 5.1.0
+
+  * Added option to create typed middelware class by extending `TypedMiddlewareBase<State, Action>`
+
+# 5.0.0
 
   * Preview version, same as 5.0.0-nullsafety
 
-5.0.0-nullsafety
+# 5.0.0-nullsafety
 
   * Update to null safety
   * Drop package:coverage

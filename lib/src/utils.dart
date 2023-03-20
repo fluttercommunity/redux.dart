@@ -115,6 +115,50 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
   }
 }
 
+/// A convenience type to build a Middleware to an Action
+/// of a specific type. Allows for Type Safe Middleware.
+///
+/// ### Example
+/// ```
+/// class CustomMiddleware extends TypedMiddlewareBase<AppState, CustomAction> {
+///   @override
+///   dynamic dispatch(
+///     Store<AppState> store,
+///     CustomAction action,
+///     NextDispatcher next,
+///   ) {
+///     next(action);
+///   }
+/// }
+/// ```
+/// We will then wire up specific types of actions to a List of Middleware
+/// that handle those actions.
+/// ```
+/// final List<Middleware<AppState>> middleware = [
+///   CallMiddleware(),
+///   LoginMiddleware(),
+///   LogoutMiddleware(),
+/// ];
+/// ```
+abstract class TypedMiddlewareBase<State, Action>
+    implements MiddlewareClass<State> {
+  /// A [Middleware] function that only works on actions of a specific type.
+  dynamic dispatch(
+    Store<State> store,
+    Action action,
+    NextDispatcher next,
+  );
+
+  @override
+  dynamic call(Store<State> store, dynamic action, NextDispatcher next) {
+    if (action is Action) {
+      return dispatch(store, action, next);
+    } else {
+      return next(action);
+    }
+  }
+}
+
 /// A convenience type for binding a piece of Middleware to an Action
 /// of a specific type. Allows for Type Safe Middleware and reduces boilerplate.
 ///
@@ -211,7 +255,8 @@ class TypedReducer<State, Action> implements ReducerClass<State> {
 ///   new TypedMiddleware<AppState, TodosLoadedAction>(saveItemsMiddleware),
 /// ];
 /// ```
-class TypedMiddleware<State, Action> implements MiddlewareClass<State> {
+class TypedMiddleware<State, Action>
+    extends TypedMiddlewareBase<State, Action> {
   /// A [Middleware] function that only works on actions of a specific type.
   final dynamic Function(
     Store<State> store,
@@ -224,13 +269,8 @@ class TypedMiddleware<State, Action> implements MiddlewareClass<State> {
   TypedMiddleware(this.middleware);
 
   @override
-  dynamic call(Store<State> store, dynamic action, NextDispatcher next) {
-    if (action is Action) {
-      return middleware(store, action, next);
-    } else {
-      return next(action);
-    }
-  }
+  dynamic dispatch(Store<State> store, Action action, NextDispatcher next) =>
+      middleware(store, action, next);
 }
 
 /// Defines a utility function that combines several reducers.
